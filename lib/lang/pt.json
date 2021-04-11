@@ -1,7 +1,18 @@
 {
   "home_page": "Página principal",
-  "personal_information": "Informação pessoal",
+  "personal_information": "Cadastre-Se",
   "required_value": "Valor requerido",
   "btn_login": "INICIAR SESSÃO",
-  "btn_register": "CADASTRE-SE"
+  "btn_register": "CADASTRE-SE",
+  "back": "Para retornar",
+  "username": "Nome de usuário",
+  "email": "Correio eletrônico",
+  "password": "Senha",
+  "password-confirmation": "Confirmar Senha",
+  "non-empty-value": "O campo não pode estar vazio",
+  "non-same-password": "Senhas nao sao as mesmas",
+  "email-used": "Email já em uso",
+  "invalid-email": "O email não é válido",
+  "non-secure-password": "A senha não é segura",
+  "a-mistake": "Ocorreu um erro"
 }

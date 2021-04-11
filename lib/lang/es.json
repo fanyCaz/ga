@@ -1,7 +1,18 @@
 {
   "home_page": "Página Principal",
-  "personal_information": "Información Personal",
+  "personal_information": "Registro",
   "required_value": "Valor requerido",
   "btn_login": "INICIAR SESIÓN",
-  "btn_register": "REGISTRATE"
+  "btn_register": "REGISTRATE",
+  "back": "Regresar",
+  "username": "Nombre de usuario",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "password-confirmation": "Confirma contraseña",
+  "non-empty-value": "No se puede dejar vacío",
+  "non-same-password": "Las contraseñas no son iguales",
+  "email-used": "Correo electrónico ya en uso",
+  "invalid-email": "El correo electrónico no es válido",
+  "non-secure-password": "La contraseña no es segura",
+  "a-mistake": "Ha ocurrido un error"
 }

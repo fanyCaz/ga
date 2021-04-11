@@ -17,9 +17,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-/*void main() {
-  runApp(MyApp());
-}*/
 
 class MyApp extends StatefulWidget {
 
@@ -93,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         },
         onGenerateRoute: CustomRouter.allRoutes,
         initialRoute: auth,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

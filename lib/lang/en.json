@@ -1,7 +1,18 @@
 {
   "home_page": "Main Page",
-  "personal_information": "Personal Information",
+  "personal_information": "Register",
   "required_value": "Required value",
   "btn_login": "LOG IN",
-  "btn_register": "REGISTER"
+  "btn_register": "REGISTER",
+  "back": "Back",
+  "username": "User Name",
+  "email": "Email",
+  "password": "Password",
+  "password-confirmation": "Password Confirmation",
+  "non-empty-value": "This field cannot be empty",
+  "non-same-password": "Passwords don´t match",
+  "email-used": "Email already in use",
+  "invalid-email": "Invalid email",
+  "non-secure-password": "Password is not secure",
+  "a-mistake": "A mistake has happened"
 }
