@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class PrincipalPage extends StatefulWidget {
   @override
@@ -12,8 +15,10 @@ class PrincipalPage extends StatefulWidget {
 }
 
 class _PrincipalPageState extends State<PrincipalPage> {
+
   @override
   Widget build(BuildContext context) {
+    GAUser currentUser = context.read<AuthenticationService>().getCurrentUser();
     return Scaffold(
       appBar: CommonAppBar(title: '',appBar: AppBar(), logout: Padding(
         padding: EdgeInsets.all(8.0),
@@ -31,14 +36,14 @@ class _PrincipalPageState extends State<PrincipalPage> {
         child: Column(
           children: [
             Spacer(),
-            Menu(),
+            menu(),
           ]
         ),
       )
     );
   }
 
-  Row Menu(){
+  Row menu(){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [

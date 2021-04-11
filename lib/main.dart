@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/localization/gallery_array_localization.dart';
-import 'package:gallery_array/pages/about.dart';
 import 'package:gallery_array/pages/application/principal.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/routes/auth_service.dart';
@@ -47,7 +46,8 @@ class _MyAppState extends State<MyApp> {
       }));
     super.didChangeDependencies();
   }
-
+  //provider no es gestor de estados
+//fluter bloc es para gestionar estados
   @override
   Widget build(BuildContext context) {
     if(_locale  == null ){

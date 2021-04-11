@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gallery_array/classes/ga_user.dart';
+import 'package:gallery_array/service/user_service.dart';
 
 class AuthenticationService{
   //to firebase
@@ -7,6 +9,12 @@ class AuthenticationService{
   AuthenticationService(this._firebaseAuth);
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
+
+  GAUser getCurrentUser(){
+    return _firebaseAuth.currentUser != null ? GAUser(
+        uid: _firebaseAuth.currentUser.uid,username: _firebaseAuth.currentUser.displayName
+    ) : null;
+  }
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
@@ -24,9 +32,13 @@ class AuthenticationService{
     }
   }
 
-  Future<String> signUp({String email, String password}) async{
+  Future<String> signUp({String email, String password, String username}) async{
+    UserService us = new UserService();
     try{
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      var createdUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await us.create(
+          GAUser(uid: createdUser.user.uid, name: '', lastname: '', username: username, type: '' )
+      );
       return "200";
     } on FirebaseAuthException catch(e){
       return e.message;

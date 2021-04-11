@@ -17,5 +17,6 @@
   "non-secure-password": "A senha não é segura",
   "wrong-password": "As credenciais estão erradas",
   "a-mistake": "Ocorreu um erro",
-  "upload-photo": "Carregar foto"
+  "upload-photo": "Carregar foto",
+  "logout-title": "Sair"
 }

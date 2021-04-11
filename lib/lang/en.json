@@ -17,5 +17,6 @@
   "non-secure-password": "Password is not secure",
   "wrong-password": "Invalid credentials",
   "a-mistake": "A mistake has happened",
-  "upload-photo": "Upload Photo"
+  "upload-photo": "Upload Photo",
+  "logout-title": "Log Out"
 }

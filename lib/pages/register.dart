@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
+import 'package:gallery_array/service/user_service.dart';
 import 'package:provider/provider.dart';
 
 
@@ -15,6 +17,24 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
+  String error_message = '';
+
+  void showError(error){
+    String _temp = '';
+    if(error == "email-already-exists" || error == "email-already-in-use"){
+      _temp = getTransValue(context, 'email-used');
+    }else if(error == "invalid-email"){
+      _temp = getTransValue(context, 'invalid-email');
+    }else if(error == "invalid-password"){
+      _temp = getTransValue(context, 'non-secure-password');
+    }else{
+      _temp = getTransValue(context, 'a-mistake');
+    }
+    setState(() {
+      error_message = _temp;
+    });
+  }
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -120,24 +140,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     try{
                       String result = await context.read<AuthenticationService>().signUp(
                           email: emailController.text.trim().toLowerCase(),
-                          password: passwordController.text.trim()
+                          password: passwordController.text.trim(),
+                        username: usernameController.text
                       );
                       if(result == "200"){
                         Navigator.pop(context);
-                        Navigator.pushNamed(context,about);
-                      }
-                      if(result == "email-already-exists" || result == "email-already-in-use"){
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text(getTransValue(context, 'email-used'))))
-                            .closed.then((value) => null);
-                      }else if(result == "invalid-email"){
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text(getTransValue(context, 'invalid-email'))))
-                            .closed.then((value) => null);
-                      }else if(result == "invalid-password"){
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text(getTransValue(context, 'non-secure-password'))))
-                            .closed.then((value) => null);
-                      }else{
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text(getTransValue(context, 'a-mistake'))))
-                            .closed.then((value) => null);
+                        Navigator.pushNamed(context,principal);
+                      } else{
+                        showError(result);
                       }
                     } catch (e){
                       print(e);
@@ -145,6 +155,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
                 },
                 child: Text( getTransValue(context,'btn_register') ),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(MediaQuery.of(context).size.width,50),
+                  primary: Color(0xFF7B39ED),
+                ),
               )
             ],
           ),

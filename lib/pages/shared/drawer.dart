@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
+import 'package:provider/provider.dart';
 
 class DrawerList extends StatefulWidget {
   @override
@@ -9,10 +13,11 @@ class DrawerList extends StatefulWidget {
 class _DrawerListState extends State<DrawerList> {
   @override
   Widget build(BuildContext context) {
-    return _drawerList();
+    final firebaseUser = context.watch<User>();
+    return _drawerList(context,firebaseUser);
   }
 
-  Container _drawerList() {
+  Container _drawerList(BuildContext context, User firebaseUser) {
     TextStyle _textStyle = TextStyle(
         color: Colors.white,
         fontSize: 24
@@ -31,33 +36,26 @@ class _DrawerListState extends State<DrawerList> {
           DrawerHeader(
             child: Container(
               height: 100,
-              child: CircleAvatar(),
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage : AssetImage(//hay que poner la imagen del perfil del usuario
+                  'lib/images/logo.png'),
+              ),
             ),
           ),
-          ListTile(
+          firebaseUser != null ? ListTile(
             leading: Icon(
-              Icons.info,
+              Icons.logout,
               color: Colors.white,
               size: 30,
             ),
-            title: Text('About', style: _textStyle,),
+            title: Text(getTransValue(context,'logout-title'), style: _textStyle,),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, about);
+              context.read<AuthenticationService>().signOut();
+              Navigator.pushNamed(context,home);
             },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.settings,
-              color: Colors.white,
-              size: 30,
-            ),
-            title: Text('Settings', style: _textStyle,),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, internal_settings);
-            },
-          )
+          ) : SizedBox(height: 10,)
         ],
       ),
     );
