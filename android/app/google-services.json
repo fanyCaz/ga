@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "899765146173",
+    "project_id": "gallery-array-2021",
+    "storage_bucket": "gallery-array-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899765146173:android:7fcd7314a1aea0fbde9054",
+        "android_client_info": {
+          "package_name": "equipo3.gallery_array"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899765146173-n4jkvmve0u2vcar0mv5rgg2likd70ugv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6md-O6Jr1qglMsCuyiw_EcOdlqvGr4SM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899765146173-n4jkvmve0u2vcar0mv5rgg2likd70ugv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
