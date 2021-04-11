@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
+import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(getTransValue(context, 'back'), AppBar()),
+      appBar: CommonAppBar(title: getTransValue(context, 'back'),appBar: AppBar()),
       body: Container(
         child: _mainForm(context),
       ),

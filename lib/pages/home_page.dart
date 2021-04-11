@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar('Gallery Array',AppBar()),
+      appBar: CommonAppBar(title:'Gallery Array',appBar: AppBar()),
       drawer: DrawerList(),
       body: _menuOptions(),
     );

@@ -1,6 +1,7 @@
 {
   "home_page": "Página principal",
   "personal_information": "Cadastre-Se",
+  "login-title": "Iniciar sessão",
   "required_value": "Valor requerido",
   "btn_login": "INICIAR SESSÃO",
   "btn_register": "CADASTRE-SE",
@@ -14,5 +15,7 @@
   "email-used": "Email já em uso",
   "invalid-email": "O email não é válido",
   "non-secure-password": "A senha não é segura",
-  "a-mistake": "Ocorreu um erro"
+  "wrong-password": "As credenciais estão erradas",
+  "a-mistake": "Ocorreu um erro",
+  "upload-photo": "Carregar foto"
 }

@@ -6,8 +6,9 @@ import 'package:gallery_array/main.dart';
 class CommonAppBar extends StatefulWidget implements PreferredSizeWidget{
   final String title;
   final AppBar appBar;
+  final Widget logout;
 
-  const CommonAppBar(this.title, this.appBar);
+  const CommonAppBar({@required this.title, @required this.appBar,this.logout = const SizedBox(height: 10.0)});
 
   @override
   _CommonAppBarState createState() => _CommonAppBarState();
@@ -49,7 +50,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
               )
             ).toList(),
           ),
-        )
+        ),
+        widget.logout
       ],
     );
   }

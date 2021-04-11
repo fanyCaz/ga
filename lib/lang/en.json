@@ -1,6 +1,7 @@
 {
   "home_page": "Main Page",
   "personal_information": "Register",
+  "login-title": "Log In",
   "required_value": "Required value",
   "btn_login": "LOG IN",
   "btn_register": "REGISTER",
@@ -14,5 +15,7 @@
   "email-used": "Email already in use",
   "invalid-email": "Invalid email",
   "non-secure-password": "Password is not secure",
-  "a-mistake": "A mistake has happened"
+  "wrong-password": "Invalid credentials",
+  "a-mistake": "A mistake has happened",
+  "upload-photo": "Upload Photo"
 }

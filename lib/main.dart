@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/localization/gallery_array_localization.dart';
 import 'package:gallery_array/pages/about.dart';
+import 'package:gallery_array/pages/application/principal.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/custom_router.dart';
@@ -102,9 +103,9 @@ class AuthenticationWrapper extends StatelessWidget{
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if(firebaseUser != null){
-      return HomePage();
+      return PrincipalPage();
     }
-    return AboutPage();//debe dirigir a la pantalla principal
+    return HomePage();//debe dirigir a la pantalla principal
   }
 }
 

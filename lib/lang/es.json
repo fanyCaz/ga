@@ -1,6 +1,7 @@
 {
   "home_page": "Página Principal",
   "personal_information": "Registro",
+  "login-title": "Iniciar Sesión",
   "required_value": "Valor requerido",
   "btn_login": "INICIAR SESIÓN",
   "btn_register": "REGISTRATE",
@@ -14,5 +15,7 @@
   "email-used": "Correo electrónico ya en uso",
   "invalid-email": "El correo electrónico no es válido",
   "non-secure-password": "La contraseña no es segura",
-  "a-mistake": "Ha ocurrido un error"
+  "wrong-password": "Las credenciales son incorrectas",
+  "a-mistake": "Ha ocurrido un error",
+  "upload-photo": "Subir Foto"
 }
