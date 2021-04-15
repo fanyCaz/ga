@@ -33,7 +33,6 @@ class UserService{
     try{
       var userHere = await _firestore.collection("Users")
           .where('uid', isEqualTo: id).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
-      //print(userHere);
       await _firestore
           .collection("Users")
           .doc(response)
@@ -46,5 +45,13 @@ class UserService{
     }catch(e){
       return e.toString();
     }
+  }
+
+  Future<GAUser> usuarioActual(String uid)async{
+    var response;
+    await _firestore.collection("Users")
+        .where('uid', isEqualTo: uid).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element;}));
+    print(response.data()['username']);
+    return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username']);
   }
 }

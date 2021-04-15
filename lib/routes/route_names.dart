@@ -7,3 +7,4 @@ const String internal_settings = '/settings';
 const String principal = '/principal';
 const String upload_photo = '/upload-photo';
 const String choose_profile = '/choose-profile';
+const String profile_page = '/profile-page';

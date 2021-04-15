@@ -19,7 +19,6 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-    print("idddd");
     return Scaffold(
       appBar: CommonAppBar(title: getTransValue(context, 'choose_profile_title') ,appBar: AppBar(), canGoBack: false,),
       body: Container(

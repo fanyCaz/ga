@@ -45,6 +45,30 @@ class _DrawerListState extends State<DrawerList> {
           ),
           firebaseUser != null ? ListTile(
             leading: Icon(
+              Icons.home,
+              color: Colors.white,
+              size: 30,
+            ),
+            title: Text(getTransValue(context,'home_page'), style: _textStyle,),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context,principal);
+            },
+          ) : SizedBox(height: 10,),
+          firebaseUser != null ? ListTile(
+            leading: Icon(
+              Icons.face,
+              color: Colors.white,
+              size: 30,
+            ),
+            title: Text(getTransValue(context,'profile-title'), style: _textStyle,),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context,profile_page);
+            },
+          ) : SizedBox(height: 10,),
+          firebaseUser != null ? ListTile(
+            leading: Icon(
               Icons.logout,
               color: Colors.white,
               size: 30,
@@ -55,7 +79,7 @@ class _DrawerListState extends State<DrawerList> {
               context.read<AuthenticationService>().signOut();
               Navigator.pushNamed(context,home);
             },
-          ) : SizedBox(height: 10,)
+          ) : SizedBox(height: 10,),
         ],
       ),
     );

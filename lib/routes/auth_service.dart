@@ -10,10 +10,12 @@ class AuthenticationService{
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  GAUser getCurrentUser(){
-    return _firebaseAuth.currentUser != null ? GAUser(
+  Future<GAUser> getCurrentUser() async {
+    UserService us = new UserService();
+    return await _firebaseAuth.currentUser != null ? us.usuarioActual(_firebaseAuth.currentUser.uid) : null;
+    /*return _firebaseAuth.currentUser != null ? GAUser(
         uid: _firebaseAuth.currentUser.uid,username: _firebaseAuth.currentUser.displayName
-    ) : null;
+    ) : null;*/
   }
 
   Future<void> signOut() async {
@@ -39,7 +41,6 @@ class AuthenticationService{
       String toRespond = await us.create(
           GAUser(uid: createdUser.user.uid, name: '', lastname: '', username: username, type: '', email: email )
       );
-      print("ID CREADO: ${createdUser.user.uid}");
       return toRespond;
     } on FirebaseAuthException catch(e){
       return e.message;
@@ -50,7 +51,6 @@ class AuthenticationService{
 
   Future<String> finishRegister({String id, String type}) async {
     UserService us = new UserService();
-    print("ID RECIBIDO ${id}");
     try{
       await us.typeOfArtist(id, type);
       return "200";

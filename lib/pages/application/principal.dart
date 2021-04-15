@@ -19,8 +19,9 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
   @override
   Widget build(BuildContext context) {
-    GAUser currentUser = context.read<AuthenticationService>().getCurrentUser();
-    if( currentUser == null){
+
+    final firebaseUser = context.watch<User>();
+    if( firebaseUser == null){
       return HomePage();
     }
 
@@ -52,27 +53,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
-        ElevatedButton(
-          onPressed: (){},
-          child: Text(
-            'uno',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          style: ElevatedButton.styleFrom(
-
-            primary: Color(0xFF7B39ED),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: (){},
-          child: Text(
-            'dos',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xFF7B39ED),
-          ),
-        ),
         ElevatedButton(
           onPressed: (){
             Navigator.pop(context);

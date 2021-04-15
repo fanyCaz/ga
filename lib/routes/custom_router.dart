@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
 import 'package:gallery_array/pages/application/principal.dart';
+import 'package:gallery_array/pages/application/profile_page.dart';
 import 'package:gallery_array/pages/application/upload.dart';
 import 'package:gallery_array/pages/choose_profile.dart';
 import 'package:gallery_array/pages/home_page.dart';
@@ -32,6 +33,8 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => UploadPage());
       case choose_profile:
         return MaterialPageRoute(builder: (_) => ChooseProfilePage());
+      case profile_page:
+        return MaterialPageRoute(builder: (_) => ProfilePage());
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }
