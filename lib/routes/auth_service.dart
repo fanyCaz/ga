@@ -36,13 +36,25 @@ class AuthenticationService{
     UserService us = new UserService();
     try{
       var createdUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      await us.create(
-          GAUser(uid: createdUser.user.uid, name: '', lastname: '', username: username, type: '' )
+      String toRespond = await us.create(
+          GAUser(uid: createdUser.user.uid, name: '', lastname: '', username: username, type: '', email: email )
       );
-      return "200";
+      print("ID CREADO: ${createdUser.user.uid}");
+      return toRespond;
     } on FirebaseAuthException catch(e){
       return e.message;
     } catch(e){
+      return e.toString();
+    }
+  }
+
+  Future<String> finishRegister({String id, String type}) async {
+    UserService us = new UserService();
+    print("ID RECIBIDO ${id}");
+    try{
+      await us.typeOfArtist(id, type);
+      return "200";
+    }catch(e){
       return e.toString();
     }
   }

@@ -18,5 +18,10 @@
   "wrong-password": "Invalid credentials",
   "a-mistake": "A mistake has happened",
   "upload-photo": "Upload Photo",
-  "logout-title": "Log Out"
+  "logout-title": "Log Out",
+  "what_profile": "What kind of artist are you?",
+  "photographer": "Photographer",
+  "painter": "Painter",
+  "choose_profile_title": "Choose the profile",
+  "not-now": "Not now"
 }

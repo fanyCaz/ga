@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
 import 'package:gallery_array/pages/application/principal.dart';
+import 'package:gallery_array/pages/application/upload.dart';
+import 'package:gallery_array/pages/choose_profile.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/login.dart';
 import 'package:gallery_array/pages/not_found.dart';
@@ -26,6 +28,10 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => LogInPage());
       case principal:
         return MaterialPageRoute(builder: (_) => PrincipalPage());
+      case upload_photo:
+        return MaterialPageRoute(builder: (_) => UploadPage());
+      case choose_profile:
+        return MaterialPageRoute(builder: (_) => ChooseProfilePage());
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
@@ -19,6 +20,10 @@ class _PrincipalPageState extends State<PrincipalPage> {
   @override
   Widget build(BuildContext context) {
     GAUser currentUser = context.read<AuthenticationService>().getCurrentUser();
+    if( currentUser == null){
+      return HomePage();
+    }
+
     return Scaffold(
       appBar: CommonAppBar(title: '',appBar: AppBar(), logout: Padding(
         padding: EdgeInsets.all(8.0),
@@ -65,13 +70,13 @@ class _PrincipalPageState extends State<PrincipalPage> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           style: ElevatedButton.styleFrom(
-
             primary: Color(0xFF7B39ED),
           ),
         ),
         ElevatedButton(
           onPressed: (){
-
+            Navigator.pop(context);
+            Navigator.pushNamed(context, upload_photo);
           },
           child: Text(
             getTransValue(context, 'upload-photo'),

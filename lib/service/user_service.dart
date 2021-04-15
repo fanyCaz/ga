@@ -19,8 +19,30 @@ class UserService{
           'type' : user.type,
           'username':user.username
         }
-      ).then((value) => print( "good ${value}")).catchError((error) => print(error.toString()));
-      return response;
+      ).then((value) => response = value.id ).catchError((error) => print(error.toString()));
+
+     // print( res.split('-')[1] );
+      return "200";
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+  Future<String> typeOfArtist(String id, String type) async{
+    String response = "error";
+    try{
+      var userHere = await _firestore.collection("Users")
+          .where('uid', isEqualTo: id).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
+      //print(userHere);
+      await _firestore
+          .collection("Users")
+          .doc(response)
+          .update(
+          {
+            'type' : type,
+          }
+      ).then((value) => print('si')).catchError((error) => print(error.toString()));
+      return "200";
     }catch(e){
       return e.toString();
     }

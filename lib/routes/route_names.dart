@@ -5,3 +5,5 @@ const String register = '/register';
 const String about = '/about';
 const String internal_settings = '/settings';
 const String principal = '/principal';
+const String upload_photo = '/upload-photo';
+const String choose_profile = '/choose-profile';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/choose_profile.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
@@ -145,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       );
                       if(result == "200"){
                         Navigator.pop(context);
-                        Navigator.pushNamed(context,principal);
+                        Navigator.pushNamed(context, choose_profile);
                       } else{
                         showError(result);
                       }

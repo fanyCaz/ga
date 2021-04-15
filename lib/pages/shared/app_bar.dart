@@ -7,8 +7,9 @@ class CommonAppBar extends StatefulWidget implements PreferredSizeWidget{
   final String title;
   final AppBar appBar;
   final Widget logout;
+  final bool canGoBack;
 
-  const CommonAppBar({@required this.title, @required this.appBar,this.logout = const SizedBox(height: 10.0)});
+  const CommonAppBar({@required this.title, @required this.appBar,this.logout = const SizedBox(height: 10.0), this.canGoBack = true});
 
   @override
   _CommonAppBarState createState() => _CommonAppBarState();
@@ -28,6 +29,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: widget.canGoBack,
       backgroundColor: Color(0xFF7B39ED),
       shadowColor: Colors.white,
       title: Text(widget.title, style: TextStyle( color: Colors.white) ),

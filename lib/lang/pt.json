@@ -18,5 +18,10 @@
   "wrong-password": "As credenciais estão erradas",
   "a-mistake": "Ocorreu um erro",
   "upload-photo": "Carregar foto",
-  "logout-title": "Sair"
+  "logout-title": "Sair",
+  "what_profile": "Que tipo de artista você é?",
+  "photographer": "Fotografo",
+  "painter": "Pintor",
+  "choose_profile_title": "Escolha o perfil",
+  "not-now": "Não agora"
 }
