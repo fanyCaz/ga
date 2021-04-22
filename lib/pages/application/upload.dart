@@ -1,12 +1,19 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
+import 'package:image/image.dart' as ui;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:typed_data';
 
 class UploadPage extends StatefulWidget {
   @override
@@ -14,9 +21,16 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
+  File _originalImage;
+  File _watermarkImage;
+  File _watermarkedImage;
+  final picker = ImagePicker();
+
   String imageUrl;
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Scaffold(
         appBar: CommonAppBar(title: getTransValue(context, 'upload-photo'),appBar: AppBar()),
         drawer: DrawerList(),
@@ -26,17 +40,18 @@ class _UploadPageState extends State<UploadPage> {
           child: Column(
             children: [
               Text('Photo'),
+              (imageUrl != null) ? Image.network(imageUrl) : Placeholder(fallbackHeight: 200.0, fallbackWidth: double.infinity,),
               Spacer(),
               ElevatedButton(
                 onPressed: (){
-                  uploadImage();
+                  uploadImage(firebaseUser.uid);
                 },
                 child: Text(
                   getTransValue(context, 'upload-file'),
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF7B39ED),
+                  primary: Colors.deepPurple,
                 ),
               )
             ],
@@ -46,7 +61,28 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 
-  uploadImage() async {
+  Future<File> getWatermarkFile() async{
+    String path = 'lib/images/watermark.png';
+    /*final byteDae = await rootBundle.load('lib/images/watermark.png');
+    var pathNow = (await getTemporaryDirectory()).path;
+
+    final file = File('$pathNow/$path');
+    await file.writeAsBytes(byteDae.buffer.asUint8List(byteDae.offsetInBytes, byteDae.lengthInBytes));
+    return file;*/
+    final byteData = await rootBundle.load('lib/images/watermark.png');
+
+    final tempFile =
+    File("${(await getTemporaryDirectory()).path}/$path");
+    final file = await tempFile.writeAsBytes(
+      byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+    );
+
+    return file;
+  }
+
+  uploadImage(String uid) async {
+
     final _storage = FirebaseStorage.instance;
     final _picker = ImagePicker();
     PickedFile image;
@@ -59,13 +95,31 @@ class _UploadPageState extends State<UploadPage> {
     if (permissionStatus.isGranted){
       //Select Image
       image = await _picker.getImage(source: ImageSource.gallery);
-      var file = File(image.path);
+      _originalImage = File(image.path);
+/*
+      ui.Image originalImage = ui.decodeImage(_originalImage.readAsBytesSync());
+
+      _watermarkImage = await getWatermarkFile();
+      ui.Image watermarkImage = ui.decodeImage( _watermarkImage.readAsBytesSync() );
+
+      ui.Image _image = ui.Image(100,50);
+      ui.drawImage(_image, watermarkImage);
+
+      ui.copyInto(originalImage, _image, dstX: originalImage.width - 100 - 25, dstY: originalImage.height- 50 -25);
+      ui.drawString(originalImage, ui.arial_24, 100, 120, 'gallery array');
+
+      List<int> wmImage = ui.encodePng(originalImage);
+      setState(() {
+        _watermarkedImage = File.fromRawPath(Uint8List.fromList(wmImage));
+      });*/
+      var rng = new Random();
+
 
       if (image != null){
         //Upload to Firebase
         var snapshot = await _storage.ref()
-            .child('folderName/imageName')
-            .putFile(file);
+            .child(uid+'/'+rng.nextInt(10000).toString())
+            .putFile(_originalImage);
 
         var downloadUrl = await snapshot.ref.getDownloadURL();
 
@@ -79,9 +133,6 @@ class _UploadPageState extends State<UploadPage> {
     } else {
       print('Grant Permissions and try again');
     }
-
-
-
 
   }
 }

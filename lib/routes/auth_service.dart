@@ -38,12 +38,12 @@ class AuthenticationService{
     UserService us = new UserService();
     try{
       var createdUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      String toRespond = await us.create(
+      await us.create(
           GAUser(uid: createdUser.user.uid, name: '', lastname: '', username: username, type: '', email: email )
       );
-      return toRespond;
+      return "200";
     } on FirebaseAuthException catch(e){
-      return e.message;
+      return e.code;
     } catch(e){
       return e.toString();
     }

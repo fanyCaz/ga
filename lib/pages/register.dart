@@ -135,6 +135,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
               ),
               const SizedBox(height: 10,),
+              Text(error_message, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
+              const SizedBox(height: 10,),
               ElevatedButton(
                 onPressed: () async {
                   if(_key.currentState.validate()){
@@ -144,6 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           password: passwordController.text.trim(),
                         username: usernameController.text
                       );
+                      print(result);
                       if(result == "200"){
                         Navigator.pop(context);
                         Navigator.pushNamed(context, choose_profile);

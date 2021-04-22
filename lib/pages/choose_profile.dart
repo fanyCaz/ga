@@ -23,12 +23,13 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
       appBar: CommonAppBar(title: getTransValue(context, 'choose_profile_title') ,appBar: AppBar(), canGoBack: false,),
       body: Container(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 10, top: MediaQuery.of(context).size.height * .2),
+          padding: EdgeInsets.only(left: 5, right: 5, top: MediaQuery.of(context).size.height * .2),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * .1, bottom: 20),
+                padding: EdgeInsets.only( bottom: 20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                       Text(
                         getTransValue(context, 'what_profile'),
@@ -40,7 +41,7 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
               Row(
                 children:[
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(right: 5.0),
                     child: ElevatedButton.icon(
                       onPressed:() async {
                         await context.read<AuthenticationService>().finishRegister(
@@ -55,27 +56,30 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(MediaQuery.of(context).size.width * .4,100),
+                        minimumSize: Size(MediaQuery.of(context).size.width * .3,100),
                         primary: Color(0xFF7B39ED),
                       ),
                     ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed:() async {
-                      await context.read<AuthenticationService>().finishRegister(
-                          id: firebaseUser.uid, type: 'painter'
-                      );
-                      Navigator.pop(context);
-                      Navigator.of(context).pushNamed(principal);
-                    },
-                    icon: Icon(Icons.brush),
-                    label: Text(
-                      getTransValue(context, 'painter'),
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(MediaQuery.of(context).size.width * .4,100),
-                      primary: Color(0xFF7B39ED),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.0),
+                    child: ElevatedButton.icon(
+                      onPressed:() async {
+                        await context.read<AuthenticationService>().finishRegister(
+                            id: firebaseUser.uid, type: 'painter'
+                        );
+                        Navigator.pop(context);
+                        Navigator.of(context).pushNamed(principal);
+                      },
+                      icon: Icon(Icons.brush),
+                      label: Text(
+                        getTransValue(context, 'painter'),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(MediaQuery.of(context).size.width * .4,100),
+                        primary: Color(0xFF7B39ED),
+                      ),
                     ),
                   ),
                 ],
@@ -84,7 +88,7 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
                 child: Text(getTransValue(context,'not-now'), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),),
                 onPressed: () async {
                   await context.read<AuthenticationService>().finishRegister(
-                      id: firebaseUser.uid, type: 'none'
+                      id: firebaseUser.uid, type: 'Artist'
                   );
                   Navigator.of(context).pushNamed(principal);
                 },

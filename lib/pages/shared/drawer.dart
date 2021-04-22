@@ -27,9 +27,7 @@ class _DrawerListState extends State<DrawerList> {
           .of(context)
           .size
           .width / 1.5,
-      color: Theme
-          .of(context)
-          .primaryColor,
+      color: Color(0xFFbaa2e1),
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[

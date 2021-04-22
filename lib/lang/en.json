@@ -25,5 +25,8 @@
   "choose_profile_title": "Choose the profile",
   "not-now": "Not now",
   "profile-title": "Profile",
-  "upload-file": "Upload"
+  "upload-file": "Upload",
+  "hello": "Hello ",
+  "number-photos": "Number of photos",
+  "Artist" : "Artist"
 }

@@ -49,6 +49,10 @@ class _PrincipalPageState extends State<PrincipalPage> {
     );
   }
 
+  Column feed(){
+
+  }
+
   Row menu(){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
