@@ -28,5 +28,7 @@
   "upload-file": "Cargar",
   "hello": "Hola ",
   "number-photos": "Número de fotos",
-  "Artist" : "Artista"
+  "Artist" : "Artista",
+  "edit": "Editar",
+  "username-controller": "Nombre de usuario"
 }

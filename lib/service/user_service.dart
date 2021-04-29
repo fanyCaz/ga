@@ -48,6 +48,25 @@ class UserService{
     }
   }
 
+  Future<String> changeUsername({String username, String id}) async {
+    String response = "error";
+    try{
+      var userHere = await _firestore.collection("Users")
+          .where('uid', isEqualTo: id).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
+      await _firestore
+          .collection("Users")
+          .doc(response)
+          .update(
+          {
+            'username' : username,
+          }
+      ).then((value) => print('si')).catchError((error) => print(error.toString()));
+      return "200";
+    }catch(e){
+      return e.toString();
+    }
+  }
+
   Future<GAUser> usuarioActual(String uid)async{
     var response;
     await _firestore.collection("Users")

@@ -10,6 +10,16 @@ class AuthenticationService{
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  Future<String> editUser({String username, String id}) async {
+    UserService us = new UserService();
+    try{
+      await us.changeUsername(username: username, id: id);
+      return "200";
+    }catch(e){
+      return e.toString();
+    }
+  }
+
   Future<GAUser> getCurrentUser() async {
     UserService us = new UserService();
     return await _firebaseAuth.currentUser != null ? us.usuarioActual(_firebaseAuth.currentUser.uid) : null;

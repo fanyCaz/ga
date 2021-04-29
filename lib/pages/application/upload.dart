@@ -96,8 +96,8 @@ class _UploadPageState extends State<UploadPage> {
       //Select Image
       image = await _picker.getImage(source: ImageSource.gallery);
       _originalImage = File(image.path);
-/*
-      ui.Image originalImage = ui.decodeImage(_originalImage.readAsBytesSync());
+
+      ui.Image image_original = ui.decodeImage(_originalImage.readAsBytesSync());
 
       _watermarkImage = await getWatermarkFile();
       ui.Image watermarkImage = ui.decodeImage( _watermarkImage.readAsBytesSync() );
@@ -105,15 +105,14 @@ class _UploadPageState extends State<UploadPage> {
       ui.Image _image = ui.Image(100,50);
       ui.drawImage(_image, watermarkImage);
 
-      ui.copyInto(originalImage, _image, dstX: originalImage.width - 100 - 25, dstY: originalImage.height- 50 -25);
-      ui.drawString(originalImage, ui.arial_24, 100, 120, 'gallery array');
+      ui.copyInto(image_original, _image, dstX: image_original.width - 100 - 25, dstY: image_original.height- 50 -25);
+      ui.drawString(image_original, ui.arial_24, 100, 120, 'gallery array');
 
-      List<int> wmImage = ui.encodePng(originalImage);
+      List<int> wmImage = ui.encodePng(image_original);
       setState(() {
         _watermarkedImage = File.fromRawPath(Uint8List.fromList(wmImage));
-      });*/
+      });
       var rng = new Random();
-
 
       if (image != null){
         //Upload to Firebase

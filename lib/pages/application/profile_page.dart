@@ -24,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       veces = 1;
       usernameNow = hola.username;
+      emailNow = hola.email != null ? hola.email : "correo@mail";
       typeNow = hola.type;
       print(typeNow);
       print(usernameNow);
@@ -52,6 +53,22 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: EdgeInsets.only(top: kToolbarHeight),
           child: Column(
             children: [
+              Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, edit_profile);
+                  },
+                  child: Text( "edit" ),
+                  style: ElevatedButton.styleFrom(
+
+                    primary: Color(0xFF7B39ED),
+                  ),
+                )
+              ],
+            ),
             UserImage(),
             Text(getTransValue(context, 'hello') + '${usernameNow} 👋',
               style: TextStyle(
@@ -60,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontSize: 30,
               )
             ,),
-            Text("su correo",
+            Text(emailNow != null ? '${emailNow}' : "",
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 color: Color(0xffc4c4d5),
@@ -105,6 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
 
   Row UserImage(){
     return Row(

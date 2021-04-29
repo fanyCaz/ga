@@ -28,5 +28,7 @@
   "upload-file": "Envio",
   "hello": "Olá ",
   "number-photos": "Número de fotos",
-  "Artist": "Artista"
+  "Artist": "Artista",
+  "edit": "Editar",
+  "username-controller": "nome do usuário"
 }

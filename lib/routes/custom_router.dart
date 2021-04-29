@@ -11,6 +11,7 @@ import 'package:gallery_array/pages/not_found.dart';
 import 'package:gallery_array/pages/register.dart';
 import 'package:gallery_array/pages/settings.dart';
 import 'package:gallery_array/routes/route_names.dart';
+import 'package:gallery_array/pages/application/edit_profile.dart';
 
 class CustomRouter{
   static Route<dynamic> allRoutes(RouteSettings settings){
@@ -35,6 +36,8 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => ChooseProfilePage());
       case profile_page:
         return MaterialPageRoute(builder: (_) => ProfilePage());
+      case edit_profile:
+        return MaterialPageRoute(builder: (_) => EditProfile());
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }
