@@ -21,9 +21,9 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
+  FirebaseStorage storage = FirebaseStorage.instance;
   File _originalImage;
-  File _watermarkImage;
-  File _watermarkedImage;
+
   final picker = ImagePicker();
 
   String imageUrl;
@@ -81,6 +81,42 @@ class _UploadPageState extends State<UploadPage> {
     return file;
   }
 
+  // Select and image from the gallery or take a picture with the camera
+  // Then upload to Firebase Storage
+  Future<void> _upload(String inputSource, String uid) async {
+
+    final picker = ImagePicker();
+    PickedFile pickedImage;
+    try {
+      pickedImage = await picker.getImage(
+          source: inputSource == 'camera'
+              ? ImageSource.camera
+              : ImageSource.gallery,
+          maxWidth: 1920);
+
+      final String fileName = path.basename(pickedImage.path);
+      File imageFile = File(pickedImage.path);
+      var rng = new Random();
+      try {
+        // Uploading the selected image with some custom meta data
+        await storage.ref(fileName).putFile(
+            imageFile,
+            SettableMetadata(customMetadata: {
+              'uploaded_by': 'A bad guy',
+              'description': 'Some description...',
+              'id': uid + "_" + rng.nextInt(10000).toString(),
+            })
+        );
+        // Refresh the UI
+        setState(() {});
+      } on FirebaseException catch (error) {
+        print(error);
+      }
+    } catch (err) {
+      print(err);
+    }
+  }
+
   uploadImage(String uid) async {
 
     final _storage = FirebaseStorage.instance;
@@ -96,7 +132,8 @@ class _UploadPageState extends State<UploadPage> {
       //Select Image
       image = await _picker.getImage(source: ImageSource.gallery);
       _originalImage = File(image.path);
-
+      print(_originalImage);
+/*
       ui.Image image_original = ui.decodeImage(_originalImage.readAsBytesSync());
 
       _watermarkImage = await getWatermarkFile();
@@ -112,6 +149,8 @@ class _UploadPageState extends State<UploadPage> {
       setState(() {
         _watermarkedImage = File.fromRawPath(Uint8List.fromList(wmImage));
       });
+
+ */
       var rng = new Random();
 
       if (image != null){

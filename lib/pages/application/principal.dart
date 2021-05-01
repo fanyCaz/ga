@@ -17,6 +17,8 @@ class PrincipalPage extends StatefulWidget {
 
 class _PrincipalPageState extends State<PrincipalPage> {
 
+  final panelTransition = Duration(milliseconds: 500);
+
   @override
   Widget build(BuildContext context) {
 
@@ -39,10 +41,9 @@ class _PrincipalPageState extends State<PrincipalPage> {
       )),
       drawer: DrawerList(),
       body: Container(
-        child: Column(
+        child: Stack(
           children: [
-            Spacer(),
-            menu(),
+            feed()
           ]
         ),
       )
@@ -50,7 +51,11 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 
   Column feed(){
-
+    return Column(
+      children: [
+        Text('hlliii'),
+      ],
+    );
   }
 
   Row menu(){

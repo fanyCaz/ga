@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
+import 'package:gallery_array/pages/application/feed_ex.dart';
 import 'package:gallery_array/pages/application/principal.dart';
 import 'package:gallery_array/pages/application/profile_page.dart';
 import 'package:gallery_array/pages/application/upload.dart';
@@ -29,7 +30,7 @@ class CustomRouter{
       case login:
         return MaterialPageRoute(builder: (_) => LogInPage());
       case principal:
-        return MaterialPageRoute(builder: (_) => PrincipalPage());
+        return MaterialPageRoute(builder: (_) => upFeedPage());
       case upload_photo:
         return MaterialPageRoute(builder: (_) => UploadPage());
       case choose_profile:
