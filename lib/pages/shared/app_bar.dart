@@ -8,8 +8,9 @@ class CommonAppBar extends StatefulWidget implements PreferredSizeWidget{
   final AppBar appBar;
   final Widget logout;
   final bool canGoBack;
+  final Widget custom;
 
-  const CommonAppBar({@required this.title, @required this.appBar,this.logout = const SizedBox(height: 10.0), this.canGoBack = true});
+  const CommonAppBar({@required this.title, @required this.appBar,this.logout = const SizedBox(height: 10.0), this.canGoBack = true, this.custom = const SizedBox(height: 10.0)});
 
   @override
   _CommonAppBarState createState() => _CommonAppBarState();
@@ -34,12 +35,13 @@ class _CommonAppBarState extends State<CommonAppBar> {
       shadowColor: Colors.white,
       title: Text(widget.title, style: TextStyle( color: Colors.white) ),
       actions: [
+        widget.custom,
         Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: DropdownButton(
-            onChanged: (Language language ){
-            _changeLanguage(language);
-          },
+              onChanged: (Language language ){
+              _changeLanguage(language);
+            },
             underline: SizedBox(),
             icon: Icon(Icons.language, color: Colors.white),
             items: Language.languageList()
@@ -53,7 +55,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
             ).toList(),
           ),
         ),
-        widget.logout
+        widget.logout,
       ],
     );
   }

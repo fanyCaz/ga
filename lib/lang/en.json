@@ -30,5 +30,9 @@
   "number-photos": "Number of photos",
   "Artist" : "Artist",
   "edit": "Edit",
-  "username-controller": "Username"
+  "username-controller": "Username",
+  "name-controller": "Name",
+  "lastname-controller": "Last Name",
+  "edit-profile": "Edit your profile",
+  "ready-edit-profile": "Ready to go"
 }

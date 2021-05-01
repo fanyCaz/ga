@@ -48,19 +48,44 @@ class UserService{
     }
   }
 
-  Future<String> changeUsername({String username, String id}) async {
+  Future<String> changeUsername({String username, String id, String name, String lastname}) async {
     String response = "error";
     try{
       var userHere = await _firestore.collection("Users")
           .where('uid', isEqualTo: id).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
-      await _firestore
-          .collection("Users")
-          .doc(response)
-          .update(
-          {
-            'username' : username,
-          }
-      ).then((value) => print('si')).catchError((error) => print(error.toString()));
+      if(username != "") {
+        await _firestore
+            .collection("Users")
+            .doc(response)
+            .update(
+            {
+              'username': username
+            }
+        ).then((value) => print('si')).catchError((error) =>
+            print(error.toString()));
+      }
+      if(name != "") {
+        await _firestore
+            .collection("Users")
+            .doc(response)
+            .update(
+            {
+              'name': name
+            }
+        ).then((value) => print('si')).catchError((error) =>
+            print(error.toString()));
+      }
+      if(lastname != "") {
+        await _firestore
+            .collection("Users")
+            .doc(response)
+            .update(
+            {
+              'lastname': lastname
+            }
+        ).then((value) => print('si')).catchError((error) =>
+            print(error.toString()));
+      }
       return "200";
     }catch(e){
       return e.toString();
@@ -71,6 +96,6 @@ class UserService{
     var response;
     await _firestore.collection("Users")
         .where('uid', isEqualTo: uid).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element;}));
-    return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'] );
+    return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'], email: response.data()['email'] );
   }
 }

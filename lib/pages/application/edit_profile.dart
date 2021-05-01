@@ -37,6 +37,8 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   TextEditingController usernameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastnameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class _EditProfileState extends State<EditProfile> {
         appBar: CommonAppBar(
           title: getTransValue(context, 'profile-title'),
           appBar: AppBar(),
+          canGoBack: true,
           logout: Padding(
               padding: EdgeInsets.all(8.0),
               child: IconButton(
@@ -60,45 +63,74 @@ class _EditProfileState extends State<EditProfile> {
               )
           ),
         ),
-        drawer: DrawerList(),
         body: Padding(
           padding: EdgeInsets.all(2.0),
-          child: Column(
-            children: [
-              Text("Edit Your Profile",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 30,
-                )
-              ),
-              TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: getTransValue(context, 'username-controller'),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0,top: kToolbarHeight),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text( getTransValue(context, 'edit-profile'),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xfffe6af3),
+                      fontSize: 30,
+                    )
                   ),
-                  controller: usernameController,
-                  validator: (value) {
-                    return null;
-                  }
+                  const SizedBox(height: 20,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: getTransValue(context, 'username-controller'),
+                    ),
+                    controller: usernameController,
+                    validator: (value) {
+                      return null;
+                    }
+                  ),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: getTransValue(context, 'name-controller'),
+                    ),
+                    controller: nameController,
+                    validator: (value) {
+                      return null;
+                    }
+                  ),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: getTransValue(context, 'lastname-controller'),
+                      ),
+                      controller: lastnameController,
+                      validator: (value) {
+                        return null;
+                      }
+                  ),
+                  const SizedBox(height: 10,),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await context.read<AuthenticationService>().editUser(
+                          username: usernameController.text.trim(), id: firebaseUser.uid,
+                        name: nameController.text, lastname: lastnameController.text
+                      );
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, profile_page);
+                    },
+                    child: Text(
+                      getTransValue(context,'ready-edit-profile'),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF7B39ED),
+                    ),
+                  )
+                ],
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  await context.read<AuthenticationService>().editUser(
-                      username: '', id: firebaseUser.uid,
-                  );
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, principal);
-                },
-                child: Text(
-                  "Ready",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF7B39ED),
-                ),
-              )
-            ],
+            ),
           ),
         )
     );
