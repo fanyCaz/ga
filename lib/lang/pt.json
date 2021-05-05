@@ -34,5 +34,6 @@
   "name-controller": "Nome",
   "lastname-controller": "Sobrenome",
   "edit-profile": "Edite seu perfil",
-  "ready-edit-profile": "Pronto para mudar"
+  "ready-edit-profile": "Pronto para mudar",
+  "description": "Descrição"
 }

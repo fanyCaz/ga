@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -25,7 +24,6 @@ class _upFeedPageState extends State<upFeedPage> {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   final _loved = <Photo>{};
-
 
   // Retriew the uploaded images
   // This function is called when the app launches for the first time or when an image is uploaded or deleted
@@ -77,26 +75,22 @@ class _upFeedPageState extends State<upFeedPage> {
             color: Colors.white,
             icon: Icon(Icons.logout),
           )
-        )
+        ),
+        custom: IconButton(
+          onPressed: (){
+            Navigator.pop(context);
+            Navigator.pushNamed(context, upload_photo);
+          },
+          color: Colors.white,
+          icon: Icon(Icons.file_upload)
+        ),
+
       ),
       drawer: DrawerList(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton.icon(
-                    onPressed: () => _upload('camera', firebaseUser.uid),
-                    icon: Icon(Icons.camera),
-                    label: Text('camera')),
-                ElevatedButton.icon(
-                    onPressed: () => _upload('gallery', firebaseUser.uid),
-                    icon: Icon(Icons.library_add),
-                    label: Text('Gallery')),
-              ],
-            ),
             Expanded(
               child: FutureBuilder(
                 future: _loadImages(),

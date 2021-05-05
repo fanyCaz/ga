@@ -10,6 +10,15 @@ class AuthenticationService{
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  Future<String> confirmUploadPhoto(String uid, String image, String description, int likes) async {
+    UserService us = new UserService();
+    try{
+      await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes);
+    }catch(Exception){
+      return "500";
+    }
+  }
+
   Future<String> editUser({String username, String id, String name, String lastname}) async {
     UserService us = new UserService();
     try{

@@ -34,5 +34,6 @@
   "name-controller": "Name",
   "lastname-controller": "Last Name",
   "edit-profile": "Edit your profile",
-  "ready-edit-profile": "Ready to go"
+  "ready-edit-profile": "Ready to go",
+  "description": "Description"
 }

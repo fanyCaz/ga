@@ -98,4 +98,22 @@ class UserService{
         .where('uid', isEqualTo: uid).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element;}));
     return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'], email: response.data()['email'] );
   }
+
+  Future<String> uploadPhotoPost({String uid, String image, String description, int likes}) async {
+    String response = "200";
+    try {
+      await _firestore
+          .collection("Post")
+          .add(
+          {
+            'uid': uid,
+            'image': image,
+            'description': description,
+            'likes': likes
+          }
+      ).then((value) => response = value.id).catchError((error) => print(error.toString()));
+    }catch(Exception){
+      return "500";
+    }
+  }
 }

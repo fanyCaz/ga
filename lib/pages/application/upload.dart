@@ -6,8 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
+import 'package:gallery_array/routes/auth_service.dart';
+import 'package:gallery_array/routes/route_names.dart';
+import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as ui;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,38 +26,110 @@ class UploadPage extends StatefulWidget {
 
 class _UploadPageState extends State<UploadPage> {
   FirebaseStorage storage = FirebaseStorage.instance;
-  File _originalImage;
 
-  final picker = ImagePicker();
+  // Select and image from the gallery or take a picture with the camera
+  // Then upload to Firebase Storage
+  Future<void> _upload(String uid) async {
+    final picker = ImagePicker();
+    PickedFile pickedImage;
+    try {
+      pickedImage = await picker.getImage(
+          source: ImageSource.gallery,
+          maxWidth: 1920);
 
+      final String fileName = path.basename(pickedImage.path);
+      File imageFile = File(pickedImage.path);
+
+      try {
+        // Uploading the selected image with some custom meta data
+        var snapshot = await storage.ref(fileName).putFile(
+            imageFile,
+            SettableMetadata(customMetadata: {
+              'uploaded_by': uid,
+            }));
+        imageUrl = await snapshot.ref.getDownloadURL();
+        // Refresh the UI
+        setState(() {});
+      } on FirebaseException catch (error) {
+        print(error);
+      }
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  // Delete the selected image
+  // This function is called when a trash icon is pressed
+  Future<void> _delete(String ref) async {
+    await storage.ref(ref).delete();
+    // Rebuild the UI
+    setState(() {});
+  }
+  TextEditingController descriptionController = TextEditingController();
   String imageUrl;
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-
+    if( firebaseUser == null){
+      return HomePage();
+    }
     return Scaffold(
-        appBar: CommonAppBar(title: getTransValue(context, 'upload-photo'),appBar: AppBar()),
-        drawer: DrawerList(),
-        body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      appBar:  CommonAppBar(
+          title: '',
+          appBar: AppBar(),
+          logout: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: (){
+                  context.read<AuthenticationService>().signOut();
+                  Navigator.pushNamed(context,home);
+                },
+                color: Colors.white,
+                icon: Icon(Icons.logout),
+              )
+          )
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(5),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Text('Photo'),
-              (imageUrl != null) ? Image.network(imageUrl) : Placeholder(fallbackHeight: 200.0, fallbackWidth: double.infinity,),
-              Spacer(),
-              ElevatedButton(
-                onPressed: (){
-                  uploadImage(firebaseUser.uid);
-                },
-                child: Text(
-                  getTransValue(context, 'upload-file'),
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+              (imageUrl != null) ? Image.network(imageUrl) :
+                IconButton(
+                  icon: Icon(Icons.add_photo_alternate),
+                  color: Colors.deepPurple,
+                  iconSize: MediaQuery.of(context).size.width * 0.3,
+                  onPressed: () => _upload(firebaseUser.uid),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple,
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: getTransValue(context, 'description'),
                 ),
-              )
+                controller: descriptionController,
+                validator: (value) {
+                  return null;
+                }
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.file_upload),
+                    color: Colors.deepPurple,
+                    iconSize: MediaQuery.of(context).size.width * 0.3,
+                    onPressed: ()
+                    {
+                      confirmUpload(
+                          firebaseUser.uid, descriptionController.text,
+                          imageUrl);
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, uploadAnimation);
+                    }
+                  )
+                ],
+              ),
             ],
           ),
         ),
@@ -61,7 +137,7 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 
-  Future<File> getWatermarkFile() async{
+  Future<File> getWatermarkFile() async {
     String path = 'lib/images/watermark.png';
     /*final byteDae = await rootBundle.load('lib/images/watermark.png');
     var pathNow = (await getTemporaryDirectory()).path;
@@ -81,42 +157,14 @@ class _UploadPageState extends State<UploadPage> {
     return file;
   }
 
+  confirmUpload(String uid, String description, String image) {
+    context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0);
+  }
+}
   // Select and image from the gallery or take a picture with the camera
   // Then upload to Firebase Storage
-  Future<void> _upload(String inputSource, String uid) async {
 
-    final picker = ImagePicker();
-    PickedFile pickedImage;
-    try {
-      pickedImage = await picker.getImage(
-          source: inputSource == 'camera'
-              ? ImageSource.camera
-              : ImageSource.gallery,
-          maxWidth: 1920);
-
-      final String fileName = path.basename(pickedImage.path);
-      File imageFile = File(pickedImage.path);
-      var rng = new Random();
-      try {
-        // Uploading the selected image with some custom meta data
-        await storage.ref(fileName).putFile(
-            imageFile,
-            SettableMetadata(customMetadata: {
-              'uploaded_by': 'A bad guy',
-              'description': 'Some description...',
-              'id': uid + "_" + rng.nextInt(10000).toString(),
-            })
-        );
-        // Refresh the UI
-        setState(() {});
-      } on FirebaseException catch (error) {
-        print(error);
-      }
-    } catch (err) {
-      print(err);
-    }
-  }
-
+/*
   uploadImage(String uid) async {
 
     final _storage = FirebaseStorage.instance;
@@ -174,3 +222,4 @@ class _UploadPageState extends State<UploadPage> {
 
   }
 }
+*/
