@@ -10,14 +10,36 @@ class uploadAnimationHome extends StatefulWidget {
   _uploadAnimationHomeState createState() => _uploadAnimationHomeState();
 }
 
-class _uploadAnimationHomeState extends State<uploadAnimationHome> {
+class _uploadAnimationHomeState extends State<uploadAnimationHome> with SingleTickerProviderStateMixin {
+
+  AnimationController _animationController;
+  Animation<double> _progressAnimation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 7));
+    _progressAnimation = CurvedAnimation(parent: _animationController, curve: Interval(0.0, 0.65));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          UploadAnimationInitial(),
+          UploadAnimationInitial(
+            progressAnimation: _progressAnimation,
+            onAnimationStarted: (){
+              _animationController.forward();
+            },
+          ),
         ],
       ),
     );

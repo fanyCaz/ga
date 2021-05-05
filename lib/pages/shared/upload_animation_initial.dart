@@ -9,6 +9,12 @@ enum AnimationState{
 }
 
 class UploadAnimationInitial extends StatefulWidget {
+
+  const UploadAnimationInitial({Key key, this.onAnimationStarted, this.progressAnimation}) : super(key: key);
+  final VoidCallback onAnimationStarted;
+  final Animation<double> progressAnimation;
+
+
   @override
   _UploadAnimationInitialState createState() => _UploadAnimationInitialState();
 }
@@ -37,16 +43,26 @@ class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
                   tween: Tween(begin: 1.0,end: 1.0),
                   duration: _duration,
                 builder: (_, value, child){
-                    return Opacity(opacity: value, child: child);
+                  return Opacity(opacity: value, child: child);
                 },
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('uploading',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300
-                    ),)
+                    Text('uploading files',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w300
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ProgressUpload(widget.progressAnimation),
+                      )
+                    ))
                   ],
                 ),
               )
@@ -80,11 +96,25 @@ class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
             onPressed: (){
               setState(() {
                 _currentState = AnimationState.start;
+                widget.onAnimationStarted;
               });
             },
           )
         ],
       ),
+    );
+  }
+}
+
+class ProgressUpload extends AnimatedWidget {
+  ProgressUpload(Animation<double> animation): super(listenable: animation);
+
+  double get value => (listenable as Animation).value;
+  @override
+  Widget build(BuildContext context) {
+    print(value);
+    return Text(
+      '${(value*100).truncate().toString()} %',
     );
   }
 }
