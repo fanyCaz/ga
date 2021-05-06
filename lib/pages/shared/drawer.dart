@@ -89,7 +89,15 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pop(context);
               Navigator.pushNamed(context, chat);
             },
-          ): SizedBox(height: 10,)
+          ): SizedBox(height: 10,),
+          ListTile(
+            leading: Icon(Icons.code),
+            title: Text('pa ver si jala'),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, a_probar);
+            },
+          )
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
 import 'package:gallery_array/pages/application/chat.dart';
 import 'package:gallery_array/pages/application/feed_ex.dart';
+import 'package:gallery_array/pages/application/gallery_feed.dart';
 import 'package:gallery_array/pages/application/principal.dart';
 import 'package:gallery_array/pages/application/profile_page.dart';
 import 'package:gallery_array/pages/application/upload.dart';
@@ -45,6 +46,8 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => uploadAnimationHome());
       case chat:
         return MaterialPageRoute(builder: (_) => ChatPage());
+      case a_probar:
+        return MaterialPageRoute(builder: (_) => GalleryWater());
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }

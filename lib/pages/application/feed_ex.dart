@@ -109,6 +109,7 @@ class _upFeedPageState extends State<upFeedPage> {
                           margin: EdgeInsets.symmetric(vertical: 10),
                           child: Column(
                             children: [
+                              //CREO QUE AQUI ESTÁ EL ERROR DE PORQUÉNO SON INDEPENDIENTES
                               _listPhoto(image),
                               Image.network(image['url'])
                             ]

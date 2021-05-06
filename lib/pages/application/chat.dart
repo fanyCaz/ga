@@ -33,6 +33,7 @@ class _ChatPageState extends State<ChatPage> {
         .then((value) => haveChats = value);
     current_chats = await context.read<AuthenticationService>().getChatsUser(uid);
     setState(() {
+      print("Lenght chats");
       print(current_chats.length);
       _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
       veces = 1;
@@ -67,8 +68,9 @@ class _ChatPageState extends State<ChatPage> {
           Center( child: Text('No tienes chats'))
           : ListView.builder(itemBuilder: (context,i)
             {
-              print(i);
-              return _buildRow(current_chats[i]);
+              if(i < current_chats.length) {
+                return _buildRow(current_chats[i]);
+              }return SizedBox(height: 10,);
             }),
     );
   }

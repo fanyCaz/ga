@@ -11,3 +11,4 @@ const String profile_page = '/profile-page';
 const String edit_profile = '/edit-profile';
 const uploadAnimation = '/upload-animation';
 const chat = '/chat';
+const a_probar = '/pantalla-a-probar';
