@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
+import 'package:gallery_array/classes/ga_user.dart';
 
 class UploadPage extends StatefulWidget {
   @override
@@ -68,11 +69,29 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController descriptionController = TextEditingController();
   String imageUrl;
 
+  int veces = 0;
+  String usernameNow = "";
+
+  void getUserNow() async {
+    GAUser hola;
+    var currentUser = await context.read<AuthenticationService>()
+        .getCurrentUser()
+        .then((value) => hola = value);
+    setState(() {
+      veces = 1;
+      usernameNow = hola.username;
+      print(usernameNow);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if( firebaseUser == null){
       return HomePage();
+    }
+    if (veces == 0) {
+      getUserNow();
     }
     return Scaffold(
       appBar:  CommonAppBar(
@@ -122,8 +141,8 @@ class _UploadPageState extends State<UploadPage> {
                     onPressed: ()
                     {
                       confirmUpload(
-                          firebaseUser.uid, descriptionController.text,
-                          imageUrl);
+                        firebaseUser.uid, descriptionController.text,
+                        imageUrl,usernameNow);
                       Navigator.pop(context);
                       Navigator.pushNamed(context, uploadAnimation);
                     }
@@ -157,8 +176,8 @@ class _UploadPageState extends State<UploadPage> {
     return file;
   }
 
-  confirmUpload(String uid, String description, String image) {
-    context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0);
+  confirmUpload(String uid, String description, String image, String username) {
+    context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0, username);
   }
 }
   // Select and image from the gallery or take a picture with the camera

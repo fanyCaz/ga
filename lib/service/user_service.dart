@@ -94,14 +94,14 @@ class UserService{
     }
   }
 
-  Future<GAUser> usuarioActual(String uid)async{
+  Future<GAUser> usuarioActual(String uid) async {
     var response;
     await _firestore.collection("Users")
         .where('uid', isEqualTo: uid).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element;}));
     return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'], email: response.data()['email'] );
   }
 
-  Future<String> uploadPhotoPost({String uid, String image, String description, int likes}) async {
+  Future<String> uploadPhotoPost({String uid, String image, String description, int likes, String username}) async {
     String response = "200";
     try {
       await _firestore
@@ -111,12 +111,29 @@ class UserService{
             'uid': uid,
             'image': image,
             'description': description,
-            'likes': likes
+            'likes': likes,
+            'username': username
           }
       ).then((value) => response = value.id).catchError((error) => print(error.toString()));
     }catch(Exception){
       return "500";
     }
+  }
+
+  Future<void> getPosts() async {
+    List<Post> posts = new List<Post>();
+    await _firestore.collection("Post")
+          .get()
+          .then((QuerySnapshot querysnap){
+            querysnap.docs.forEach((element){
+              Post pst = new Post(
+                image: element["image"], description: element["description"],
+                uid: element["uid"], likes: element["likes"], username: element["username"]
+              );
+              if(pst != null){ posts.add(pst); }
+            })
+          })
+    return posts;
   }
 
   Future<bool> haveChat(String uid) async {

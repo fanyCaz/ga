@@ -33,6 +33,7 @@ class _upFeedPageState extends State<upFeedPage> {
     final ListResult result = await storage.ref().list();
     final List<Reference> allFiles = result.items;
 
+//AQUI SE TIENE QUE HACER LA BÚSQUEDA A LA TABLA DE 
     await Future.forEach<Reference>(allFiles, (file) async {
       final String fileUrl = await file.getDownloadURL();
       final FullMetadata fileMeta = await file.getMetadata();

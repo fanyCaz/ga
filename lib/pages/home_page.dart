@@ -5,6 +5,7 @@ import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/route_names.dart';
+import 'package:gallery_array/routes/auth_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Container _menuOptions(){
+    final firebaseUser = context.watch<User>();
+    if( firebaseUser != null){
+      return upFeedPage();
+    }
     return Container(
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 10, top: 20),

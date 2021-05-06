@@ -11,10 +11,10 @@ class AuthenticationService{
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<String> confirmUploadPhoto(String uid, String image, String description, int likes) async {
+  Future<String> confirmUploadPhoto(String uid, String image, String description, int likes, String username) async {
     UserService us = new UserService();
     try{
-      await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes);
+      await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes, username: username);
     }catch(Exception){
       return "500";
     }
@@ -74,6 +74,12 @@ class AuthenticationService{
     }catch(e){
       return e.toString();
     }
+  }
+
+  Future<List<Post>> getImagesFeed() async {
+    UserService us = new UserService();
+    List<Post> posts = await us.getFeed();
+    return posts;
   }
 
   Future<bool> haveChats({String uid}) async {

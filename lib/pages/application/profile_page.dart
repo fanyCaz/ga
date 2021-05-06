@@ -108,6 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            //HACER BÚSQUEDA DE CUANTAS FOTOS TIENEN SU UID
                             Text('0',
                               style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
                             ),
