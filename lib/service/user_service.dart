@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gallery_array/classes/ga_user.dart';
+import 'package:gallery_array/classes/message.dart';
+import 'package:gallery_array/service/utils.dart';
 
 bool USE_FIRESTORE_EMULATOR = false;
 
@@ -130,5 +132,22 @@ class UserService{
     }catch(Exception){
       return response;
     }
+  }
+
+  //Future<List<Message>>
+  Future<List<Message>> getChats(String uid) async {
+    List<Message> messagesChat = new List<Message>();
+    await _firestore.collection("Messages")
+        .get()
+        .then((QuerySnapshot querysnap){
+          querysnap.docs.forEach((element) {
+            Message mss = new Message(
+              uidUser1: element["uidUser1"], uidUser2: element["uidUser2"],
+                id: element["id"], message: element["message"], date: element["date"]
+            );
+            if(mss != null) {messagesChat.add(mss);}
+          });
+        });
+    return messagesChat;
   }
 }

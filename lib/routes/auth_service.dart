@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gallery_array/classes/ga_user.dart';
+import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/service/user_service.dart';
 
 class AuthenticationService{
@@ -84,5 +85,11 @@ class AuthenticationService{
     }catch(e){
       return response;
     }
+  }
+
+  Future<List<Message>> getChatsUser(String  uid) async {
+    UserService us = new UserService();
+    List<Message> mesages = await us.getChats(uid);
+    return mesages;
   }
 }

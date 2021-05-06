@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
@@ -22,21 +23,27 @@ class _ChatPageState extends State<ChatPage> {
   chatState _currentState = chatState.doesntHaveChats;
   int veces = 0;
   bool haveChats = false;
-  void getChats() async {
+
+  List<Message> current_chats = new List<Message>();
+  void getChats(String uid) async {
     Message msg;
+    //context.read<AuthenticationService>().getChatsUser(uid);
     await context.read<AuthenticationService>()
         .haveChats()
         .then((value) => haveChats = value);
+    current_chats = await context.read<AuthenticationService>().getChatsUser(uid);
     setState(() {
+      print(current_chats.length);
       _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
-      print(haveChats);
+      veces = 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
     if (veces == 0) {
-      getChats();
+      getChats(firebaseUser.uid);
     }
     return Scaffold(
       appBar:CommonAppBar(
@@ -55,13 +62,24 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       drawer: DrawerList(),
-      body: Column(
-        children: [
-          (_currentState == chatState.doesntHaveChats) ?
-              Center( child: Text('No tienes chats'))
-              : Center( child: Text('si tienes')),
-        ],
-      ),
+      body:
+      (_currentState == chatState.doesntHaveChats) ?
+          Center( child: Text('No tienes chats'))
+          : ListView.builder(itemBuilder: (context,i)
+            {
+              print(i);
+              return _buildRow(current_chats[i]);
+            }),
+    );
+  }
+
+  Widget _buildRow(Message msg){
+    return ListTile(
+      title: Text(msg.uidUser2),
+      trailing: Icon(Icons.navigate_next),
+      onTap: (){
+        print("Holaa");
+      },
     );
   }
 }
