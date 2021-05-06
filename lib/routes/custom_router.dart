@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
+import 'package:gallery_array/pages/application/chat.dart';
 import 'package:gallery_array/pages/application/feed_ex.dart';
 import 'package:gallery_array/pages/application/principal.dart';
 import 'package:gallery_array/pages/application/profile_page.dart';
@@ -42,6 +43,8 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => EditProfile());
       case uploadAnimation:
         return MaterialPageRoute(builder: (_) => uploadAnimationHome());
+      case chat:
+        return MaterialPageRoute(builder: (_) => ChatPage());
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }

@@ -116,4 +116,19 @@ class UserService{
       return "500";
     }
   }
+
+  Future<bool> haveChat(String uid) async {
+    bool response = false;
+    try {
+      await _firestore.collection("Messages")
+          .where('uidUser1', isEqualTo: uid).limit(1).get().then((value) =>
+          value.docs.forEach((element) {
+            print(element.id);
+            response = element.exists;
+          }));
+      return response;
+    }catch(Exception){
+      return response;
+    }
+  }
 }

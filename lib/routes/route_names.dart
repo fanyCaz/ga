@@ -10,3 +10,4 @@ const String choose_profile = '/choose-profile';
 const String profile_page = '/profile-page';
 const String edit_profile = '/edit-profile';
 const uploadAnimation = '/upload-animation';
+const chat = '/chat';

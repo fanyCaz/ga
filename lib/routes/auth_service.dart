@@ -74,4 +74,15 @@ class AuthenticationService{
       return e.toString();
     }
   }
+
+  Future<bool> haveChats({String uid}) async {
+    UserService us = new UserService();
+    bool response = false;
+    try{
+      response = await us.haveChat(uid);
+      return response;
+    }catch(e){
+      return response;
+    }
+  }
 }

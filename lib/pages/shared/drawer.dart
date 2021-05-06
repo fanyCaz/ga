@@ -78,6 +78,18 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pushNamed(context,home);
             },
           ) : SizedBox(height: 10,),
+          firebaseUser != null ? ListTile(
+            leading: Icon(
+              Icons.question_answer,
+              color: Colors.white,
+              size: 30
+            ),
+            title: Text(getTransValue(context, 'chat'), style: _textStyle,),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, chat);
+            },
+          ): SizedBox(height: 10,)
         ],
       ),
     );
