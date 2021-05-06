@@ -31,7 +31,7 @@ class CustomRouter{
       case login:
         return MaterialPageRoute(builder: (_) => LogInPage());
       case principal:
-        return MaterialPageRoute(builder: (_) => uploadAnimationHome());
+        return MaterialPageRoute(builder: (_) => upFeedPage());
       case upload_photo:
         return MaterialPageRoute(builder: (_) => UploadPage());
       case choose_profile:

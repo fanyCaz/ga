@@ -3,7 +3,7 @@ import 'package:gallery_array/pages/shared/upload_animation_initial.dart';
 
 const mainBackupColor = Color(0xFF5113AA);
 const secondaryBackupColor = Color(0xFFBC53FA);
-const backgroundColor = Color(0xFFFCE7FE);
+const backgroundColor = Color(0xFFFFFFFF);
 
 class uploadAnimationHome extends StatefulWidget {
   @override

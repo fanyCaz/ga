@@ -135,8 +135,7 @@ class _upFeedPageState extends State<upFeedPage> {
     return ListTile(
       dense: false,
       title: Text(image['uploaded_by']),
-      subtitle: Text(
-        image['description'],
+      subtitle: Text("jao",
         style: TextStyle(color: Colors.black.withOpacity(0.6)),
       ),
       trailing: Icon(

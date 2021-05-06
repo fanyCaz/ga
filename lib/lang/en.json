@@ -35,5 +35,6 @@
   "lastname-controller": "Last Name",
   "edit-profile": "Edit your profile",
   "ready-edit-profile": "Ready to go",
-  "description": "Description"
+  "description": "Description",
+  "loading-photo": "Uploading Photo"
 }

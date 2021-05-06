@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/routes/route_names.dart';
 
 const _duration = Duration(milliseconds: 500);
 
@@ -21,21 +25,16 @@ class UploadAnimationInitial extends StatefulWidget {
 
 class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
 
-  AnimationState _currentState = AnimationState.initial;
-
+  AnimationState _currentState = AnimationState.start;
+  Timer _timer;
   @override
   Widget build(BuildContext context) {
+    widget.onAnimationStarted();
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            flex: 3,
-            child: Text('Cloud',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-          ),
           if(_currentState == AnimationState.end)
             Expanded(
               flex: 2,
@@ -48,10 +47,11 @@ class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('uploading files',
+                    const SizedBox(height: 20),
+                    Text(getTransValue(context, "loading-photo"),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 25,
                         color: Colors.black,
                         fontWeight: FontWeight.w300
                       ),
@@ -77,6 +77,12 @@ class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
                   setState(() {
                     _currentState = AnimationState.end;
                   });
+                  _timer = new Timer(const Duration(milliseconds: 4000), () {
+
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, principal);
+                  });
+
                 },
                 builder: (_, value, child){
                   return Opacity(
@@ -91,15 +97,6 @@ class _UploadAnimationInitialState extends State<UploadAnimationInitial> {
                 ),
               ),
             ),
-          RaisedButton(
-            child: Text('create'),
-            onPressed: (){
-              setState(() {
-                _currentState = AnimationState.start;
-                widget.onAnimationStarted;
-              });
-            },
-          )
         ],
       ),
     );
