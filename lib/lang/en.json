@@ -38,5 +38,6 @@
   "description": "Description",
   "loading-photo": "Uploading Photo",
   "chat": "Chat",
-  "no-posts": "No Posts yet"
+  "no-posts": "No Posts yet",
+  "send-msg": "Send a message"
 }

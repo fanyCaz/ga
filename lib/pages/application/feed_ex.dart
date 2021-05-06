@@ -137,7 +137,8 @@ class _upFeedPageState extends State<upFeedPage> {
                 child: Column(
                   children: [
                     _listPhoto(current_posts[index], firebaseUser.uid),
-                    Image.network(current_posts[index].image)
+                    Image.network(current_posts[index].image),
+                    _footerPhoto(context,current_posts[index].uid, firebaseUser.uid),
                   ]
                 ),
               );
@@ -168,9 +169,28 @@ class _upFeedPageState extends State<upFeedPage> {
           liked_posts.add(minipost.id);
         }
         setState(() {
-
         });
       },
+    );
+  }
+
+  Widget _footerPhoto(BuildContext context, String userId, String currentUser){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+            ),
+            icon: (currentUser != userId) ? Icon(Icons.forward_to_inbox) : null,
+            label: Text(getTransValue(context, 'send-msg')),
+            onPressed: (){
+              print("send");
+            },
+          )
+        ],
+      ),
     );
   }
 

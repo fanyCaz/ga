@@ -182,8 +182,13 @@ class UserService{
     String response = "error";
     List<dynamic> elements = new List<dynamic>();
     elements.add(idPost);
+    await _firestore.collection("Post")
+      .doc(idPost)
+      .update({ 'likes' : FieldValue.increment(1) });
     await _firestore.collection("Users")
-        .where('uid', isEqualTo: uidUser).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
+      .where('uid', isEqualTo: uidUser).limit(1).get()
+        .then((value) => value.docs.forEach((element) {print(element.id); response = element.id;})
+    );
     if(add) {
       await _firestore
           .collection("Users")
@@ -192,7 +197,7 @@ class UserService{
           {
             'liked_posts': FieldValue.arrayUnion(elements)
           }
-      ).then((value) => print('si')).catchError((error) =>
+      ).then((value) => print('Agregado')).catchError((error) =>
           print(error.toString()));
     }else{
       await _firestore
@@ -202,7 +207,7 @@ class UserService{
           {
             'liked_posts': FieldValue.arrayRemove(elements)
           }
-      ).then((value) => print('si')).catchError((error) =>
+      ).then((value) => print('Removido')).catchError((error) =>
           print(error.toString()));
     }
     return "200";
