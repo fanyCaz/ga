@@ -77,7 +77,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildRow(Message msg){
     return ListTile(
-      title: Text(msg.uidUser2),
+      title: Text(msg.idConversation),
       trailing: Icon(Icons.navigate_next),
       onTap: (){
         print("Holaa");

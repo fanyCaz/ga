@@ -8,6 +8,7 @@ import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/photo.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/application/chat_conversation.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
@@ -183,9 +184,13 @@ class _upFeedPageState extends State<upFeedPage> {
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
             ),
-            icon: (currentUser != userId) ? Icon(Icons.forward_to_inbox) : null,
+            icon: (currentUser != userId) ? Icon(Icons.forward_to_inbox) : Icon(Icons.description),
             label: Text(getTransValue(context, 'send-msg')),
             onPressed: (){
+              Navigator.pop(context);
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChatConversationPage(uidUser1: userId,uidUser2: currentUser, ))
+              );
               print("send");
             },
           )

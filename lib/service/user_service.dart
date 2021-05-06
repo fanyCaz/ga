@@ -118,6 +118,7 @@ class UserService{
             'date': date
           }
       ).then((value) => response = value.id).catchError((error) => print(error.toString()));
+      return "200";
     }catch(Exception){
       return "500";
     }
@@ -213,6 +214,53 @@ class UserService{
     return "200";
   }
 
+  Future<String> makeConversation(String uid1, String uid2) async {
+    String response = "";
+    bool exists = false;
+    try {
+      await _firestore.collection("Conversations")
+          .where('uidUser1', isEqualTo: uid1).where('uidUser2', isEqualTo: uid2).limit(1).get().then((value) =>
+          value.docs.forEach((element) {
+            print(element.id);
+            response = element.id;
+            exists = element.exists;
+          }));
+      if(!exists) {
+        await _firestore
+            .collection("Conversations")
+            .add(
+            {
+              'uidUser1': uid1,
+              'uidUser2': uid2,
+            }
+        ).then((value) => response = value.id).catchError((error) =>
+            print(error.toString()));
+      }
+      return response;
+    }catch(exception){
+      print("Hubo error en make conversation");
+      print(exception);
+      return "500";
+    }
+  }
+
+  Future<void> sendMessage(String idConversation, String message, DateTime date) async {
+    String response = "";
+    try {
+      await _firestore.collection("Messages")
+          .add({
+            'message': message,
+            'idConversation': idConversation,
+            'date': date
+          }).then((value) => response = value.id).catchError((error) =>
+          print(error.toString()));
+    }catch(exception){
+      print("Hubo error en send message");
+      print(exception);
+    }
+  }
+
+  //Estos probablemente se vayan
   Future<bool> haveChat(String uid) async {
     bool response = false;
     try {
@@ -236,8 +284,7 @@ class UserService{
         .then((QuerySnapshot querysnap){
           querysnap.docs.forEach((element) {
             Message mss = new Message(
-              uidUser1: element["uidUser1"], uidUser2: element["uidUser2"],
-                id: element["id"], message: element["message"], date: element["date"]
+              idConversation: element["id"], message: element["message"], date: element["date"].toDate()
             );
             if(mss != null) {messagesChat.add(mss);}
           });

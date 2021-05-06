@@ -39,5 +39,6 @@
   "loading-photo": "Carregando foto",
   "chat": "Conversar",
   "no-posts": "Aún no hay publicaciones",
-  "send-msg": "Enviar mensagem"
+  "send-msg": "Enviar mensagem",
+  "send-conversation-message": "Mensagem"
 }

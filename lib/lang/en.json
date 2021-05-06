@@ -39,5 +39,6 @@
   "loading-photo": "Uploading Photo",
   "chat": "Chat",
   "no-posts": "No Posts yet",
-  "send-msg": "Send a message"
+  "send-msg": "Send a message",
+  "send-conversation-message": "Message"
 }

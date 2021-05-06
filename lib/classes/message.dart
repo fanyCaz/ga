@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Message{
-  final String uidUser1;
-  final String uidUser2;
   final String message;
-  final String id;
+  final String idConversation;
   final String date;
 
-  Message({this.uidUser1, this.uidUser2, this.message, this.id, this.date});
+  Message({this.message, this.idConversation, this.date});
 }

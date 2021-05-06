@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/about.dart';
 import 'package:gallery_array/pages/application/chat.dart';
+import 'package:gallery_array/pages/application/chat_conversation.dart';
 import 'package:gallery_array/pages/application/feed_ex.dart';
 import 'package:gallery_array/pages/application/gallery_feed.dart';
 import 'package:gallery_array/pages/application/principal.dart';
@@ -46,6 +47,7 @@ class CustomRouter{
         return MaterialPageRoute(builder: (_) => uploadAnimationHome());
       case chat:
         return MaterialPageRoute(builder: (_) => ChatPage());
+      //El case de chat conversation se queda manual en las vistas
       case a_probar:
         return MaterialPageRoute(builder: (_) => GalleryWater());
     }

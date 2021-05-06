@@ -16,6 +16,7 @@ class AuthenticationService{
     UserService us = new UserService();
     try{
       await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes, username: username, date: date);
+      return "200";
     }catch(Exception){
       return "500";
     }
@@ -113,6 +114,24 @@ class AuthenticationService{
       print(exception);
     }
     return "500";
+  }
+
+  Future<String> addConversation(String uid1, String uid2) async {
+    UserService us = new UserService();
+    try {
+      String res = await us.makeConversation(uid1, uid2);
+      return res;
+    }catch(exception){
+      print("Hubo un error en add conversation");
+      print(exception);
+    }
+    return "500";
+  }
+
+  Future<void> sendMessage(String idConversation, String message) async {
+    DateTime hoy = DateTime.now();
+    UserService us = new UserService();
+    us.sendMessage(idConversation, message, hoy);
   }
 
   Future<bool> haveChats({String uid}) async {
