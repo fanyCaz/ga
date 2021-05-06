@@ -27,7 +27,7 @@ class UploadPage extends StatefulWidget {
 
 class _UploadPageState extends State<UploadPage> {
   FirebaseStorage storage = FirebaseStorage.instance;
-
+  DateTime hoy = DateTime.now();
   // Select and image from the gallery or take a picture with the camera
   // Then upload to Firebase Storage
   Future<void> _upload(String uid) async {
@@ -142,7 +142,7 @@ class _UploadPageState extends State<UploadPage> {
                     {
                       confirmUpload(
                         firebaseUser.uid, descriptionController.text,
-                        imageUrl,usernameNow);
+                        imageUrl,usernameNow, hoy);
                       Navigator.pop(context);
                       Navigator.pushNamed(context, uploadAnimation);
                     }
@@ -176,8 +176,8 @@ class _UploadPageState extends State<UploadPage> {
     return file;
   }
 
-  confirmUpload(String uid, String description, String image, String username) {
-    context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0, username);
+  confirmUpload(String uid, String description, String image, String username, DateTime date) {
+    context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0, username, date);
   }
 }
   // Select and image from the gallery or take a picture with the camera

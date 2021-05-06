@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
+import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/user_service.dart';
 
 class AuthenticationService{
@@ -11,10 +12,10 @@ class AuthenticationService{
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<String> confirmUploadPhoto(String uid, String image, String description, int likes, String username) async {
+  Future<String> confirmUploadPhoto(String uid, String image, String description, int likes, String username, DateTime date) async {
     UserService us = new UserService();
     try{
-      await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes, username: username);
+      await us.uploadPhotoPost(uid: uid, image: image, description: description, likes: likes, username: username, date: date);
     }catch(Exception){
       return "500";
     }
@@ -78,8 +79,15 @@ class AuthenticationService{
 
   Future<List<Post>> getImagesFeed() async {
     UserService us = new UserService();
-    List<Post> posts = await us.getFeed();
-    return posts;
+    List<Post> posts = new List<Post>();
+    try {
+      posts = await us.getFeed();
+      return posts;
+    }catch(exception){
+      print(exception);
+      print("Hubo un error en el get images feed");
+      return posts;
+    }
   }
 
   Future<bool> haveChats({String uid}) async {

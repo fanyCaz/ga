@@ -10,7 +10,7 @@ class GalleryStoreBlock with ChangeNotifier{
   //Estados
   //Normal
   GalleryState galleryState = GalleryState.normal;
-  List<Photo> catalog = List.unmodifiable(groceryProducts);
+  //List<Photo> catalog = List.unmodifiable(groceryProducts);
   List<GroceryProductItem> cart = []; //recomendable para inicializar listas
 
 }

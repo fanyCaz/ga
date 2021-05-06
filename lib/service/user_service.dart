@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
+import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/utils.dart';
 
 bool USE_FIRESTORE_EMULATOR = false;
@@ -101,7 +102,7 @@ class UserService{
     return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'], email: response.data()['email'] );
   }
 
-  Future<String> uploadPhotoPost({String uid, String image, String description, int likes, String username}) async {
+  Future<String> uploadPhotoPost({String uid, String image, String description, int likes, String username, DateTime date}) async {
     String response = "200";
     try {
       await _firestore
@@ -112,7 +113,8 @@ class UserService{
             'image': image,
             'description': description,
             'likes': likes,
-            'username': username
+            'username': username,
+            'date': date
           }
       ).then((value) => response = value.id).catchError((error) => print(error.toString()));
     }catch(Exception){
@@ -120,19 +122,30 @@ class UserService{
     }
   }
 
-  Future<void> getPosts() async {
+  Future<List<Post>> getFeed() async {
     List<Post> posts = new List<Post>();
-    await _firestore.collection("Post")
+    try {
+      await _firestore.collection("Post")
           .get()
-          .then((QuerySnapshot querysnap){
-            querysnap.docs.forEach((element){
-              Post pst = new Post(
-                image: element["image"], description: element["description"],
-                uid: element["uid"], likes: element["likes"], username: element["username"]
-              );
-              if(pst != null){ posts.add(pst); }
-            })
-          })
+          .then((QuerySnapshot querysnap) {
+        querysnap.docs.forEach((element) {
+          Post pst = new Post(
+              image: element["image"],
+              description: element["description"],
+              uid: element["uid"],
+              likes: element["likes"],
+              username: element["username"],
+              date: element["date"].toDate()
+          );
+          if (pst != null) {
+            posts.add(pst);
+          }
+        });
+      });
+    }catch(ex){
+      print("Error en user service");
+      print(ex);
+    }
     return posts;
   }
 

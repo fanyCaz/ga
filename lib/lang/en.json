@@ -37,5 +37,6 @@
   "ready-edit-profile": "Ready to go",
   "description": "Description",
   "loading-photo": "Uploading Photo",
-  "chat": "Chat"
+  "chat": "Chat",
+  "no-posts": "No Posts yet"
 }
