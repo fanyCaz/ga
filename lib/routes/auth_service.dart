@@ -90,6 +90,31 @@ class AuthenticationService{
     }
   }
 
+  Future<List<String>> pastLikedPosts(String uid) async {
+    UserService us = new UserService();
+    List<String> likedPosts = new List<String>();
+    try {
+      likedPosts = await us.getPastLikedPosts(uid);
+      return likedPosts;
+    }catch(exception){
+      print(exception);
+      print("Hubo un error en el  past liked posts");
+      return likedPosts;
+    }
+  }
+
+  Future<String> saveLikedPost(String idPost, String uidUser, bool add) async{
+    UserService us = new UserService();
+    try{
+      await us.saveLikedPost(idPost, uidUser, add);
+      return "200";
+    }catch(exception){
+      print("Hubo un error en save liked post de auth service");
+      print(exception);
+    }
+    return "500";
+  }
+
   Future<bool> haveChats({String uid}) async {
     UserService us = new UserService();
     bool response = false;

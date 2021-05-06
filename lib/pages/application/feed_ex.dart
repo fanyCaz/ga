@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/photo.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/localization/constants.dart';
@@ -28,15 +29,21 @@ class upFeedPage extends StatefulWidget {
 }
 
 class _upFeedPageState extends State<upFeedPage> {
+
+  String usernameNow = "";
+
   FirebaseStorage storage = FirebaseStorage.instance;
   FeedState _currentState = FeedState.loading;
-  final _loved = <Photo>{};
 
   int veces = 0;
   List<Post> current_posts = new List<Post>();
-  void getCurrentPosts() async {
+  List<String> liked_posts = new List<String>();
+  void getCurrentPosts(String firebaseUid) async {
+    GAUser hola;
+    //await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
     current_posts = await context.read<AuthenticationService>().getImagesFeed();
     current_posts.sort((a,b) => b.date.compareTo(a.date));
+    liked_posts = await context.read<AuthenticationService>().pastLikedPosts(firebaseUid);
     setState(() {
       _currentState = (current_posts != null) ? FeedState.havePosts : FeedState.doesntHavePosts;
       veces = 1;
@@ -81,7 +88,7 @@ class _upFeedPageState extends State<upFeedPage> {
       return HomePage();
     }
     if(veces == 0){
-      getCurrentPosts();
+      getCurrentPosts(firebaseUser.uid);
     }
     return Scaffold(
       appBar: CommonAppBar(
@@ -129,8 +136,7 @@ class _upFeedPageState extends State<upFeedPage> {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   children: [
-                    //CREO QUE AQUI ESTÁ EL ERROR DE PORQUÉNO SON INDEPENDIENTES
-                    _listPhoto(current_posts[index]),
+                    _listPhoto(current_posts[index], firebaseUser.uid),
                     Image.network(current_posts[index].image)
                   ]
                 ),
@@ -141,7 +147,8 @@ class _upFeedPageState extends State<upFeedPage> {
       );
   }
 
-  Widget _listPhoto(Post minipost){
+  Widget _listPhoto(Post minipost, String currentUser){
+    bool _isLiked = liked_posts.contains(minipost.id);
     return ListTile(
       dense: false,
       title: Text(minipost.username),
@@ -149,11 +156,26 @@ class _upFeedPageState extends State<upFeedPage> {
         style: TextStyle(color: Colors.black.withOpacity(0.6)),
       ),
       trailing: Icon(
-        Icons.favorite_border,
+        (_isLiked) ? Icons.favorite : Icons.favorite_border,
         color:Colors.red,
       ),
       onTap: (){
+        if(liked_posts.contains(minipost.id)){
+          liked_posts.remove(minipost.id);
+          changeLikesPosts(minipost.id, currentUser, false);
+        }else{
+          changeLikesPosts(minipost.id, currentUser, true);
+          liked_posts.add(minipost.id);
+        }
+        setState(() {
+
+        });
       },
     );
+  }
+
+  void changeLikesPosts(String id, String currentUser, bool added) async {
+    print(liked_posts.contains(id));
+    context.read<AuthenticationService>().saveLikedPost(id, currentUser, added);
   }
 }

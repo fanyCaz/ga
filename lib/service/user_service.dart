@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/classes/post.dart';
@@ -130,6 +131,7 @@ class UserService{
           .then((QuerySnapshot querysnap) {
         querysnap.docs.forEach((element) {
           Post pst = new Post(
+              id: element.id,
               image: element["image"],
               description: element["description"],
               uid: element["uid"],
@@ -147,6 +149,63 @@ class UserService{
       print(ex);
     }
     return posts;
+  }
+
+  Future<List<String>> getPastLikedPosts(String uidUser) async {
+    List<String> likedPosts = new List<String>();
+    List<dynamic> likedTemp;
+    try {
+      await _firestore.collection("Users")
+          .where('uid', isEqualTo: uidUser).limit(1).get().then(
+              (value) =>
+              value.docs.forEach(
+                      (element) {
+                    print(element.data());
+                    print(element.data()["liked_posts"]);
+                    likedTemp = element.data()["liked_posts"];
+                  }
+              )
+      );
+      print(likedTemp.runtimeType);
+      for(int i = 0; i < likedTemp.length; i++){
+        likedPosts.add(likedTemp[i]);
+      }
+      return likedPosts;
+    }catch(exception){
+      print("Error en get past liked posts");
+      print(exception);
+      return List<String>();
+    }
+  }
+
+  Future<String> saveLikedPost(String idPost, String uidUser, bool add) async {
+    String response = "error";
+    List<dynamic> elements = new List<dynamic>();
+    elements.add(idPost);
+    await _firestore.collection("Users")
+        .where('uid', isEqualTo: uidUser).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element.id;}));
+    if(add) {
+      await _firestore
+          .collection("Users")
+          .doc(response)
+          .update(
+          {
+            'liked_posts': FieldValue.arrayUnion(elements)
+          }
+      ).then((value) => print('si')).catchError((error) =>
+          print(error.toString()));
+    }else{
+      await _firestore
+          .collection("Users")
+          .doc(response)
+          .update(
+          {
+            'liked_posts': FieldValue.arrayRemove(elements)
+          }
+      ).then((value) => print('si')).catchError((error) =>
+          print(error.toString()));
+    }
+    return "200";
   }
 
   Future<bool> haveChat(String uid) async {

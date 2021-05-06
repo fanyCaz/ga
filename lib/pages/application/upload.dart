@@ -37,7 +37,6 @@ class _UploadPageState extends State<UploadPage> {
       pickedImage = await picker.getImage(
           source: ImageSource.gallery,
           maxWidth: 1920);
-
       final String fileName = path.basename(pickedImage.path);
       File imageFile = File(pickedImage.path);
 

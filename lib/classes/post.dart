@@ -7,7 +7,9 @@ class Post{
   final int likes;
   final String username;
   final DateTime date;
+  //EL id del Post es el id del documento en Firebase
+  final String id;
 
-  Post({this.image, this.description, this.uid, this.likes, this.username, this.date});
+  Post({this.image, this.description, this.uid, this.likes, this.username, this.date, this.id});
 
 }
