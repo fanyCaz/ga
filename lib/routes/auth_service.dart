@@ -128,10 +128,22 @@ class AuthenticationService{
     return "500";
   }
 
-  Future<void> sendMessage(String idConversation, String message) async {
+  Future<void> sendMessage(String idConversation, String message, String uidSender) async {
     DateTime hoy = DateTime.now();
     UserService us = new UserService();
-    us.sendMessage(idConversation, message, hoy);
+    us.sendMessage(idConversation, message, hoy, uidSender);
+  }
+
+  Future<List<Message>> getMessagesFromConversation(String idConversation) async {
+    UserService us = new UserService();
+    List<Message> messages = new List<Message>();
+    try{
+      messages = await us.getMessagesFeed(idConversation);
+    }catch(exception){
+      print("Error en get messages from conversation");
+      print(exception);
+    }
+    return messages;
   }
 
   Future<bool> haveChats({String uid}) async {

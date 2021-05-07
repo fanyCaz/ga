@@ -130,15 +130,15 @@ class UserService{
       await _firestore.collection("Post")
           .get()
           .then((QuerySnapshot querysnap) {
-        querysnap.docs.forEach((element) {
-          Post pst = new Post(
-              id: element.id,
-              image: element["image"],
-              description: element["description"],
-              uid: element["uid"],
-              likes: element["likes"],
-              username: element["username"],
-              date: element["date"].toDate()
+            querysnap.docs.forEach((element) {
+              Post pst = new Post(
+                  id: element.id,
+                  image: element["image"],
+                  description: element["description"],
+                  uid: element["uid"],
+                  likes: element["likes"],
+                  username: element["username"],
+                  date: element["date"].toDate()
           );
           if (pst != null) {
             posts.add(pst);
@@ -157,15 +157,16 @@ class UserService{
     List<dynamic> likedTemp;
     try {
       await _firestore.collection("Users")
-          .where('uid', isEqualTo: uidUser).limit(1).get().then(
-              (value) =>
-              value.docs.forEach(
-                      (element) {
-                    print(element.data());
-                    print(element.data()["liked_posts"]);
-                    likedTemp = element.data()["liked_posts"];
-                  }
-              )
+          .where('uid', isEqualTo: uidUser).limit(1)
+          .get().then(
+            (value) =>
+            value.docs.forEach(
+                  (element) {
+                  print(element.data());
+                  print(element.data()["liked_posts"]);
+                  likedTemp = element.data()["liked_posts"];
+                }
+            )
       );
       print(likedTemp.runtimeType);
       for(int i = 0; i < likedTemp.length; i++){
@@ -219,7 +220,8 @@ class UserService{
     bool exists = false;
     try {
       await _firestore.collection("Conversations")
-          .where('uidUser1', isEqualTo: uid1).where('uidUser2', isEqualTo: uid2).limit(1).get().then((value) =>
+          .where('uidUser1', isEqualTo: uid1).where('uidUser2', isEqualTo: uid2).limit(1)
+          .get().then((value) =>
           value.docs.forEach((element) {
             print(element.id);
             response = element.id;
@@ -244,20 +246,46 @@ class UserService{
     }
   }
 
-  Future<void> sendMessage(String idConversation, String message, DateTime date) async {
+  Future<void> sendMessage(String idConversation, String message, DateTime date, String uidSender) async {
     String response = "";
     try {
       await _firestore.collection("Messages")
-          .add({
-            'message': message,
-            'idConversation': idConversation,
-            'date': date
-          }).then((value) => response = value.id).catchError((error) =>
-          print(error.toString()));
+        .add({
+          'message': message,
+          'idConversation': idConversation,
+          'date': date,
+          'uidSender': uidSender
+        }).then((value) => response = value.id).catchError((error) =>
+        print(error.toString()));
     }catch(exception){
       print("Hubo error en send message");
       print(exception);
     }
+  }
+
+  Future<List<Message>> getMessagesFeed(String idConversation) async {
+    List<Message> messages = new List<Message>();
+    try {
+      await _firestore.collection("Messages")
+          .where('idConversation', isEqualTo: idConversation)
+          .get()
+          .then((QuerySnapshot querysnap) {
+            querysnap.docs.forEach((element) {
+              Message msg = new Message(
+                idConversation: element["idConversation"],
+                message: element["message"],
+                date: element["date"].toDate(),
+              );
+          if (msg != null) {
+            messages.add(msg);
+          }
+        });
+      });
+    }catch(ex){
+      print("Error en get messages feed");
+      print(ex);
+    }
+    return messages;
   }
 
   //Estos probablemente se vayan

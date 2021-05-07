@@ -2,6 +2,12 @@
 
 Gallery Array es un proyecto para subir fotografías del arte que hayas creado, poder mandar mensajes a otros creadores y ver lo que los artistas a tu al rededor están creando.
 
+### Resources
+- https://stackoverflow.com/questions/55889609/how-to-make-image-with-watermark-in-flutter
+- https://github.com/SurajLad/VideoCall-App-Flutter
+- https://www.freecodecamp.org/news/build-a-chat-app-ui-with-flutter/
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
