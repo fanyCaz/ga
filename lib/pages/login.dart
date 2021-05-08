@@ -90,7 +90,7 @@ class _LogInPageState extends State<LogInPage> {
                     }
                 ),
                 const SizedBox(height: 10,),
-                Text(error_message, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
+                Text((error_message == null) ? '' : error_message, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
                 const SizedBox(height: 10,),
                 ElevatedButton(
                   onPressed: () async {

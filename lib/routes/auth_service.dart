@@ -35,7 +35,9 @@ class AuthenticationService{
 
   Future<GAUser> getCurrentUser() async {
     UserService us = new UserService();
-    return await _firebaseAuth.currentUser != null ? us.usuarioActual(_firebaseAuth.currentUser.uid) : null;
+    GAUser user = new GAUser();
+    user = (_firebaseAuth.currentUser != null ? us.usuarioActual(_firebaseAuth.currentUser.uid) : null) as GAUser;
+    return user;
   }
 
   Future<void> signOut() async {

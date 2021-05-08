@@ -1,16 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_array/classes/language.dart';
 import 'package:gallery_array/localization/constants.dart';
-import 'package:gallery_array/main.dart';
 import 'package:gallery_array/pages/application/feed_ex.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/route_names.dart';
-import 'package:gallery_array/routes/auth_service.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
@@ -52,6 +53,9 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
+    if(firebaseUser == null){
+      return HomePage();
+    }
     if(_currentState == ChatConversationState.loading){
       LoadConversation();
     }

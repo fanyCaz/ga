@@ -58,14 +58,14 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 UserImage(),
                 SizedBox(height: 15,),
-                Text(getTransValue(context, 'hello') + '${usernameNow} 👋',
+                Text(getTransValue(context, 'hello') + '$usernameNow 👋',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                     fontSize: 30,
                   )
                 ,),
-                Text(emailNow != null ? '${emailNow}' : "",
+                Text(emailNow != null ? '$emailNow' : "",
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Color(0xffc4c4d5),

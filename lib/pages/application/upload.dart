@@ -8,16 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
-import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:path/path.dart' as path;
-import 'package:image/image.dart' as ui;
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:typed_data';
 import 'package:gallery_array/classes/ga_user.dart';
 
 class UploadPage extends StatefulWidget {

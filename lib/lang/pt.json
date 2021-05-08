@@ -41,5 +41,7 @@
   "no-posts": "Aún no hay publicaciones",
   "send-msg": "Enviar mensagem",
   "send-conversation-message": "Mensagem",
-  "no-messages": "Você não tem mensagens"
+  "no-messages": "Você não tem mensagens",
+  "no-chats": "Você não tem bate-papos",
+  "invalid-password": "Credenciais não válidas"
 }

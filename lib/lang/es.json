@@ -41,5 +41,7 @@
   "no-posts": "No hay posts publicados todavía",
   "send-msg": "Envia un mensaje",
   "send-conversation-message": "Mensaje",
-  "no-messages": "No tienes mensajes"
+  "no-messages": "No tienes mensajes",
+  "no-chats": "No tienes conversaciones",
+  "invalid-password": "Credenciales inválidas"
 }

@@ -100,7 +100,9 @@ class UserService{
   Future<GAUser> usuarioActual(String uid) async {
     var response;
     await _firestore.collection("Users")
-        .where('uid', isEqualTo: uid).limit(1).get().then((value) => value.docs.forEach((element) {print(element.id); response = element;}));
+        .where('uid', isEqualTo: uid).limit(1)
+        .get()
+        .then((value) => value.docs.forEach((element) { response = element;}));
     return GAUser(uid: uid, type: response.data()['type'], username: response.data()['username'], email: response.data()['email'] );
   }
 
@@ -162,9 +164,7 @@ class UserService{
           .get().then(
             (value) =>
             value.docs.forEach(
-                  (element) {
-                  print(element.data());
-                  print(element.data()["liked_posts"]);
+                (element) {
                   likedTemp = element.data()["liked_posts"];
                 }
             )
@@ -308,21 +308,29 @@ class UserService{
     }
   }
 
-  //Future<List<Message>>
   Future<List<Conversation>> getChats(String uid) async {
     List<Conversation> conversations = new List<Conversation>();
     List<String> ids = new List<String>();
+    GAUser talkingTo = new GAUser();
     try {
       await _firestore.collection("Conversations")
         .where('uidUser1', isEqualTo: uid)
         .get()
         .then((QuerySnapshot querysnap) {
-          querysnap.docs.forEach((element) {
+          querysnap.docs.forEach((element) async {
+            if(uid == element.data()["uidUser1"]){
+              talkingTo = await usuarioActual( element.data()["uidUser2"] );
+            }else{
+              talkingTo = await usuarioActual( element.data()["uidUser1"] );
+            }
           Conversation cnv = new Conversation(
             id: element.id,
             userId1: element.data()["uidUser1"],
-            userId2: element.data()["uidUser2"]
+            userId2: element.data()["uidUser2"],
+            whoImTalkingTo: talkingTo.username
           );
+            print("Elemento");
+            print(element.id);
           if(!ids.contains(element.id)){
             conversations.add(cnv);
             ids.add(element.id);
@@ -330,15 +338,23 @@ class UserService{
         });
       });
       await _firestore.collection("Conversations")
-          .where('uidUser2', isEqualTo: uid)
-          .get()
-          .then((QuerySnapshot querysnap) {
-        querysnap.docs.forEach((element) {
+        .where('uidUser2', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querysnap) {
+        querysnap.docs.forEach((element) async {
+          if(uid == element.data()["uidUser1"]){
+            talkingTo = await usuarioActual( element.data()["uidUser2"] );
+          }else{
+            talkingTo = await usuarioActual( element.data()["uidUser1"] );
+          }
           Conversation cnv = new Conversation(
-              id: element.id,
-              userId1: element.data()["uidUser1"],
-              userId2: element.data()["uidUser2"]
+            id: element.id,
+            userId1: element.data()["uidUser1"],
+            userId2: element.data()["uidUser2"],
+            whoImTalkingTo: talkingTo.username
           );
+          print("Elemento");
+          print(element.id);
           if(!ids.contains(element.id)){
             conversations.add(cnv);
             ids.add(element.id);

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/application/chat_conversation.dart';
 import 'package:gallery_array/pages/application/chat_header.dart';
+import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
@@ -28,22 +30,43 @@ class _ChatPageState extends State<ChatPage> {
 
   List<Conversation> currentConversations = new List<Conversation>();
   void getChats(String uid) async {
-    print("ESTAMOS EN CHAT");
-    await context.read<AuthenticationService>()
-        .haveChats()
-        .then((value) => haveChats = value);
+    //await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
     currentConversations = await context.read<AuthenticationService>().getChatsUser(uid);
+
     setState(() {
-      print("Lenght chats");
-      print(currentConversations.length);
-      _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
+      _currentState = (currentConversations != null) ? chatState.haveChats : chatState.doesntHaveChats;
       veces = 1;
     });
   }
 
+  /*void getChats(String uid) async {
+    print("ESTAMOS EN CHAT");
+    await context.read<AuthenticationService>()
+        .haveChats()
+        .then((value) => haveChats = value);
+    if(haveChats) {
+      currentConversations =
+        await context.read<AuthenticationService>().getChatsUser(uid);
+      _currentState = chatState.haveChats;
+    }else{
+      _currentState = chatState.doesntHaveChats;
+    }
+    setState(() {
+      print("Lenght chats");
+      print(currentConversations.length);
+      print("Tiene chats");
+      print(haveChats);
+      _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
+      veces = 1;
+    });
+  }*/
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
+    if(firebaseUser == null){
+      return HomePage();
+    }
     if (veces == 0) {
       getChats(firebaseUser.uid);
     }
@@ -55,6 +78,7 @@ class _ChatPageState extends State<ChatPage> {
             padding: EdgeInsets.all(8.0),
             child: IconButton(
               onPressed: () {
+                Navigator.pop(context);
                 context.read<AuthenticationService>().signOut();
                 Navigator.pushNamed(context, home);
               },
@@ -64,29 +88,62 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       drawer: DrawerList(),
-      body:
-      (_currentState == chatState.loading) ?
-      Center( child: CircularProgressIndicator() ) :
-      (_currentState == chatState.doesntHaveChats) ?
-        Center( child: Text('No tienes chats'))
-        : ListView.builder(
+      body: (_currentState == chatState.loading) ? Center(
+        child: CircularProgressIndicator(),
+      ) :
+      Padding(
+        padding: const EdgeInsets.all(20),
+        child: (_currentState == chatState.doesntHaveChats) ?
+        Column(
+          children: [
+            Text(getTransValue(context, 'no-posts'))
+          ],
+        ): ListView.builder(
           itemCount: currentConversations.length,
-          itemBuilder: (context,i)
-          {
-            return _buildRow(currentConversations[i]);
-          }),
+          itemBuilder: (context, index) {
+            return Card(
+              color: Color(0xffe3d5eb),
+              shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)
+              ),
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  _buildRow(currentConversations[index],firebaseUser.uid)
+                ]
+              ),
+            );
+          },
+        ),
+      )
     );
   }
 
-  Widget _buildRow(Conversation cnv){
-    print(cnv.id);
-    print(cnv.userId1);
-    print(cnv.userId2);
+  Widget _buildRow(Conversation cnv, String uidCurrentUser){
     return ListTile(
-      title: Text(cnv.id),
-      trailing: Icon(Icons.navigate_next),
+      dense: false,
+      title: Text(cnv.whoImTalkingTo),
+      trailing: Wrap(
+        spacing: 12,
+        children: [
+          Icon(
+            Icons.navigate_next,
+            color:Colors.red,
+          ),
+        ]
+      ),
       onTap: (){
-        print("Holaa");
+        Navigator.pop(context);
+        Navigator.push(context,
+          MaterialPageRoute(
+            builder: (context) =>
+              ChatConversationPage(
+                uidUserReceiver: cnv.userId1,
+                uidCurrentUser: cnv.userId2,
+                userChatting: cnv.whoImTalkingTo,
+              )
+          )
+        );
       },
     );
   }
