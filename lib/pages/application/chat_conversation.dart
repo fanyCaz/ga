@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
@@ -17,8 +18,9 @@ class ChatConversationPage extends StatefulWidget {
 
   final String uidUserReceiver;
   final String uidCurrentUser;
+  final String userChatting;
 
-  const ChatConversationPage({Key key, this.uidUserReceiver, this.uidCurrentUser}) : super(key: key);
+  const ChatConversationPage({Key key, this.uidUserReceiver, this.uidCurrentUser, this.userChatting}) : super(key: key);
 
   @override
   _ChatConversationPageState createState() => _ChatConversationPageState();
@@ -30,13 +32,20 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
   String idConversation = "";
   List<Message> messages = new List<Message>();
   TextEditingController messageController = TextEditingController();
+  bool hasMessages = false;
 
   void LoadConversation() async {
-    idConversation = await context.read<AuthenticationService>().addConversation(widget.uidUser1, widget.uidUser2);
-    print(idConversation);
+    print("ESTAMOS EN CHAT CONVERSATION");
+    idConversation = await context.read<AuthenticationService>().addConversation(widget.uidUserReceiver, widget.uidCurrentUser);
+    messages = await context.read<AuthenticationService>().getMessagesFromConversation(idConversation);
+    messages.sort((a,b) => a.date.compareTo(b.date));
+    hasMessages = messages.length > 0;
     //messages
+    print(widget.userChatting.toString());
     setState(() {
-      _currentState = ChatConversationState.hasMessages;
+      _currentState = (hasMessages) ?
+        ChatConversationState.hasMessages :
+        ChatConversationState.doesntHaveMessages;
     });
   }
 
@@ -61,6 +70,10 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
             icon: Icon(Icons.logout),
           ),
         ),
+        custom: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: (_currentState == ChatConversationState.loading) ? Text('') : Text(" " + widget.userChatting.toString(), style: TextStyle(fontSize: 24),),
+        ),
         //Agregar custom con nombre del usuario
       ),
       drawer: DrawerList(),
@@ -68,6 +81,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
         Center( child: CircularProgressIndicator() ) :
         Stack(
           children: [
+            (_currentState == ChatConversationState.hasMessages) ?
             ListView.builder(
               itemCount: messages.length,
               shrinkWrap: true,
@@ -78,23 +92,23 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                   padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
                   child: Align(
                     alignment: (messages[index].uidSender == firebaseUser.uid) ?
-                      Alignment.topRight : Alignment.topLeft,
+                    Alignment.topLeft : Alignment.topRight ,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: (messages[index].uidSender == firebaseUser.uid) ? 
                         Colors.blue[200] : Colors.grey.shade200,
                       ),
-                      padding: EdgeInserts.all(16),
+                      padding: EdgeInsets.all(16),
                       child: Text(
                         messages[index].message,
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
                   ),
-                ),
+                );
               }
-            ),
+            ) : Center(child: Text(getTransValue(context, 'no-messages')),),
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
@@ -104,23 +118,9 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                 color: Colors.white,
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: (){
-                        
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Icon(Icons.add, color: Colors.white, size: 20),
-                      ),
-                    ),
-                    SizedBox(width: 15),
                     Expanded(
                       child: TextField(
+                        controller: messageController,
                         decoration: InputDecoration(
                           hintText: getTransValue(context, 'send-conversation-message'),
                           border: OutlineInputBorder(),
@@ -129,12 +129,14 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                     ),
                     SizedBox(width: 15,),
                     FloatingActionButton(
-                      onPressed: (){},
                       child: Icon(Icons.send, color: Colors.white, size: 18),
                       elevation: 0,
                       onPressed: (){
                         context.read<AuthenticationService>()
                         .sendMessage(idConversation, messageController.text, widget.uidCurrentUser);
+                        setState(() {
+                          _currentState = ChatConversationState.loading;
+                        });
                       }
                     ),
                   ]
@@ -142,38 +144,6 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
               ),
             ),
           ]
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Spacer(),
-              Row(
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: getTransValue(context, 'send-conversation-message'),
-                  ),
-                  controller: messageController,
-                  validator: (value) {
-                    if(value.empty){
-                      //do something
-                      return null;
-                    }
-                    return null;
-                  }
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.send),
-                onPressed: (){
-                  _currentState = ChatConversationState.loading;
-                  context.read<AuthenticationService>()
-                  .sendMessage(idConversation, messageController.text, firebaseUser.uid);
-                }
-              ),
-            ],
-          ),
         ),
     );
   }

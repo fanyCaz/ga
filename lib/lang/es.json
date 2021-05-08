@@ -40,5 +40,6 @@
   "chat": "Chat",
   "no-posts": "No hay posts publicados todavía",
   "send-msg": "Envia un mensaje",
-  "send-conversation-message": "Mesaje"
+  "send-conversation-message": "Mensaje",
+  "no-messages": "No tienes mensajes"
 }

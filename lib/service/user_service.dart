@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/classes/post.dart';
@@ -184,14 +185,14 @@ class UserService{
     String response = "error";
     List<dynamic> elements = new List<dynamic>();
     elements.add(idPost);
-    await _firestore.collection("Post")
-      .doc(idPost)
-      .update({ 'likes' : FieldValue.increment(1) });
     await _firestore.collection("Users")
       .where('uid', isEqualTo: uidUser).limit(1).get()
         .then((value) => value.docs.forEach((element) {print(element.id); response = element.id;})
     );
     if(add) {
+      await _firestore.collection("Post")
+          .doc(idPost)
+          .update({ 'likes' : FieldValue.increment(1) });
       await _firestore
           .collection("Users")
           .doc(response)
@@ -202,6 +203,9 @@ class UserService{
       ).then((value) => print('Agregado')).catchError((error) =>
           print(error.toString()));
     }else{
+      await _firestore.collection("Post")
+          .doc(idPost)
+          .update({ 'likes' : FieldValue.increment(- 1) });
       await _firestore
           .collection("Users")
           .doc(response)
@@ -292,7 +296,7 @@ class UserService{
   Future<bool> haveChat(String uid) async {
     bool response = false;
     try {
-      await _firestore.collection("Messages")
+      await _firestore.collection("Conversations")
           .where('uidUser1', isEqualTo: uid).limit(1).get().then((value) =>
           value.docs.forEach((element) {
             print(element.id);
@@ -305,18 +309,46 @@ class UserService{
   }
 
   //Future<List<Message>>
-  Future<List<Message>> getChats(String uid) async {
-    List<Message> messagesChat = new List<Message>();
-    await _firestore.collection("Messages")
+  Future<List<Conversation>> getChats(String uid) async {
+    List<Conversation> conversations = new List<Conversation>();
+    List<String> ids = new List<String>();
+    try {
+      await _firestore.collection("Conversations")
+        .where('uidUser1', isEqualTo: uid)
         .get()
-        .then((QuerySnapshot querysnap){
+        .then((QuerySnapshot querysnap) {
           querysnap.docs.forEach((element) {
-            Message mss = new Message(
-              idConversation: element["id"], message: element["message"], date: element["date"].toDate()
-            );
-            if(mss != null) {messagesChat.add(mss);}
-          });
+          Conversation cnv = new Conversation(
+            id: element.id,
+            userId1: element.data()["uidUser1"],
+            userId2: element.data()["uidUser2"]
+          );
+          if(!ids.contains(element.id)){
+            conversations.add(cnv);
+            ids.add(element.id);
+          }
         });
-    return messagesChat;
+      });
+      await _firestore.collection("Conversations")
+          .where('uidUser2', isEqualTo: uid)
+          .get()
+          .then((QuerySnapshot querysnap) {
+        querysnap.docs.forEach((element) {
+          Conversation cnv = new Conversation(
+              id: element.id,
+              userId1: element.data()["uidUser1"],
+              userId2: element.data()["uidUser2"]
+          );
+          if(!ids.contains(element.id)){
+            conversations.add(cnv);
+            ids.add(element.id);
+          }
+        });
+      });
+    }catch(exception){
+      print("Hubo error en get chats");
+      print(exception);
+    }
+    return conversations;
   }
 }

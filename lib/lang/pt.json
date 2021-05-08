@@ -40,5 +40,6 @@
   "chat": "Conversar",
   "no-posts": "Aún no hay publicaciones",
   "send-msg": "Enviar mensagem",
-  "send-conversation-message": "Mensagem"
+  "send-conversation-message": "Mensagem",
+  "no-messages": "Você não tem mensagens"
 }

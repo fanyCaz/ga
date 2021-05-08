@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/application/chat_header.dart';
@@ -10,6 +11,7 @@ import 'package:gallery_array/routes/route_names.dart';
 import 'package:provider/provider.dart';
 
 enum chatState{
+  loading,
   haveChats,
   doesntHaveChats
 }
@@ -20,21 +22,20 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  chatState _currentState = chatState.doesntHaveChats;
+  chatState _currentState = chatState.loading;
   int veces = 0;
   bool haveChats = false;
 
-  List<Message> current_chats = new List<Message>();
+  List<Conversation> currentConversations = new List<Conversation>();
   void getChats(String uid) async {
-    Message msg;
-    //context.read<AuthenticationService>().getChatsUser(uid);
+    print("ESTAMOS EN CHAT");
     await context.read<AuthenticationService>()
         .haveChats()
         .then((value) => haveChats = value);
-    current_chats = await context.read<AuthenticationService>().getChatsUser(uid);
+    currentConversations = await context.read<AuthenticationService>().getChatsUser(uid);
     setState(() {
       print("Lenght chats");
-      print(current_chats.length);
+      print(currentConversations.length);
       _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
       veces = 1;
     });
@@ -64,20 +65,25 @@ class _ChatPageState extends State<ChatPage> {
       ),
       drawer: DrawerList(),
       body:
+      (_currentState == chatState.loading) ?
+      Center( child: CircularProgressIndicator() ) :
       (_currentState == chatState.doesntHaveChats) ?
-          Center( child: Text('No tienes chats'))
-          : ListView.builder(itemBuilder: (context,i)
-            {
-              if(i < current_chats.length) {
-                return _buildRow(current_chats[i]);
-              }return SizedBox(height: 10,);
-            }),
+        Center( child: Text('No tienes chats'))
+        : ListView.builder(
+          itemCount: currentConversations.length,
+          itemBuilder: (context,i)
+          {
+            return _buildRow(currentConversations[i]);
+          }),
     );
   }
 
-  Widget _buildRow(Message msg){
+  Widget _buildRow(Conversation cnv){
+    print(cnv.id);
+    print(cnv.userId1);
+    print(cnv.userId2);
     return ListTile(
-      title: Text(msg.idConversation),
+      title: Text(cnv.id),
       trailing: Icon(Icons.navigate_next),
       onTap: (){
         print("Holaa");

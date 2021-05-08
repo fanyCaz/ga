@@ -139,7 +139,7 @@ class _upFeedPageState extends State<upFeedPage> {
                   children: [
                     _listPhoto(current_posts[index], firebaseUser.uid),
                     Image.network(current_posts[index].image),
-                    _footerPhoto(context,current_posts[index].uid, firebaseUser.uid),
+                    _footerPhoto(context,current_posts[index].uid, firebaseUser.uid, current_posts[index].username),
                   ]
                 ),
               );
@@ -157,9 +157,14 @@ class _upFeedPageState extends State<upFeedPage> {
       subtitle: Text(minipost.description,
         style: TextStyle(color: Colors.black.withOpacity(0.6)),
       ),
-      trailing: Icon(
-        (_isLiked) ? Icons.favorite : Icons.favorite_border,
-        color:Colors.red,
+      trailing: Wrap(
+        spacing: 12,
+        children: [
+          Icon(
+            (_isLiked) ? Icons.favorite : Icons.favorite_border,
+            color:Colors.red,
+          ),
+        ]
       ),
       onTap: (){
         if(liked_posts.contains(minipost.id)){
@@ -175,32 +180,34 @@ class _upFeedPageState extends State<upFeedPage> {
     );
   }
 
-  Widget _footerPhoto(BuildContext context, String userId, String currentUser){
+  Widget _footerPhoto(BuildContext context, String userId, String currentUser, String username){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
+          (currentUser != userId) ?
           ElevatedButton.icon(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
             ),
-            icon: (currentUser != userId) ? Icon(Icons.forward_to_inbox) : Icon(Icons.description),
+            icon: Icon(Icons.forward_to_inbox),
             label: Text(getTransValue(context, 'send-msg')),
             onPressed: (){
               Navigator.pop(context);
               Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ChatConversationPage(uidUser1: userId,uidUser2: currentUser, ))
+                MaterialPageRoute(
+                  builder: (context) =>
+                    ChatConversationPage(uidUserReceiver: userId,uidCurrentUser: currentUser, userChatting: username,)
+                )
               );
-              print("send");
             },
-          )
+          ): SizedBox(height: 10,)
         ],
       ),
     );
   }
 
   void changeLikesPosts(String id, String currentUser, bool added) async {
-    print(liked_posts.contains(id));
     context.read<AuthenticationService>().saveLikedPost(id, currentUser, added);
   }
 }
