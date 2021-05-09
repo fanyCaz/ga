@@ -61,6 +61,10 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     if(_currentState == ChatConversationState.loading){
       loadConversation();
     }
+    print("user current" +  firebaseUser.uid);
+    print("Usernames");
+    print(widget.uidUser1);
+    print(widget.uidUser2);
     return Scaffold(
       appBar: CommonAppBar(
         title: '',
@@ -81,10 +85,9 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
           child: (_currentState == ChatConversationState.loading) ?
             Text('-') :
           (firebaseUser.uid == widget.uidUser1) ?
-            Text(' ${widget.username1}', style: TextStyle(fontSize: 24)) :
-            Text(" ${widget.username2}", style: TextStyle(fontSize: 24)),
+            Text(' ${widget.username2}', style: TextStyle(fontSize: 24)) :
+            Text(" ${widget.username1}", style: TextStyle(fontSize: 24)),
         ),
-        //Agregar custom con nombre del usuario
       ),
       drawer: DrawerList(),
       body: (_currentState == ChatConversationState.loading) ?
@@ -98,24 +101,22 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index){
+                print("SENDER");
+                print(messages[index].uidSender);
                 return Container(
-                  padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+                  padding: EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
                   child: Align(
                     alignment: (messages[index].uidSender == firebaseUser.uid) ?
-                    Alignment.topLeft : Alignment.topRight ,
+                      Alignment.topRight : Alignment.topLeft,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: (messages[index].uidSender == firebaseUser.uid) ? 
-                        Colors.blue[200] : Colors.grey.shade200,
+                        color: (messages[index].uidSender == firebaseUser.uid ? Colors.grey.shade200 : Colors.blue[200]),
                       ),
+                      child: Text(messages[index].message),
                       padding: EdgeInsets.all(16),
-                      child: Text(
-                        messages[index].message,
-                        style: TextStyle(fontSize: 15),
-                      ),
                     ),
-                  ),
+                  )
                 );
               }
             ) : Center(child: Text(getTransValue(context, 'no-messages')),),
@@ -145,6 +146,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                         context.read<AuthenticationService>()
                         .sendMessage(idConversation, messageController.text, firebaseUser.uid);
                         setState(() {
+                          messageController.clear();
                           _currentState = ChatConversationState.loading;
                         });
                       }

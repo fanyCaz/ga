@@ -292,6 +292,7 @@ class UserService{
                 idConversation: element["idConversation"],
                 message: element["message"],
                 date: element["date"].toDate(),
+                uidSender: element["uidSender"]
               );
           if (msg != null) {
             messages.add(msg);
