@@ -26,14 +26,14 @@ class _EditProfileState extends State<EditProfile> {
     var currentUser = await context.read<AuthenticationService>()
         .getCurrentUser()
         .then((value) => hola = value);
-    setState(() {
-      veces = 1;
-      usernameNow = hola.username;
-      emailNow = hola.email != null ? hola.email : "correo@mail";
-      typeNow = hola.type;
-      print(typeNow);
-      print(usernameNow);
-    });
+        setState(() {
+          veces = 1;
+          usernameNow = hola.username;
+          emailNow = hola.email != null ? hola.email : "correo@mail";
+          typeNow = hola.type;
+          print(typeNow);
+          print(usernameNow);
+        });
   }
 
   TextEditingController usernameController = TextEditingController();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/home_page.dart';
@@ -17,11 +18,12 @@ enum ChatConversationState{
 
 class ChatConversationPage extends StatefulWidget {
 
-  final String uidUserReceiver;
-  final String uidCurrentUser;
-  final String userChatting;
+  final String uidUser1;
+  final String uidUser2;
+  final String username1;
+  final String username2;
 
-  const ChatConversationPage({Key key, this.uidUserReceiver, this.uidCurrentUser, this.userChatting}) : super(key: key);
+  const ChatConversationPage({Key key, this.uidUser1, this.uidUser2, this.username1, this.username2, }) : super(key: key);
 
   @override
   _ChatConversationPageState createState() => _ChatConversationPageState();
@@ -35,14 +37,14 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
   TextEditingController messageController = TextEditingController();
   bool hasMessages = false;
 
-  void LoadConversation() async {
+  void loadConversation() async {
     print("ESTAMOS EN CHAT CONVERSATION");
-    idConversation = await context.read<AuthenticationService>().addConversation(widget.uidUserReceiver, widget.uidCurrentUser);
+    idConversation = await context.read<AuthenticationService>().addConversation(uid1: widget.uidUser1, uid2: widget.uidUser2, username1: widget.username1, username2: widget.username2);
     messages = await context.read<AuthenticationService>().getMessagesFromConversation(idConversation);
     messages.sort((a,b) => a.date.compareTo(b.date));
     hasMessages = messages.length > 0;
     //messages
-    print(widget.userChatting.toString());
+    print(widget.username1);
     setState(() {
       _currentState = (hasMessages) ?
         ChatConversationState.hasMessages :
@@ -57,7 +59,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
       return HomePage();
     }
     if(_currentState == ChatConversationState.loading){
-      LoadConversation();
+      loadConversation();
     }
     return Scaffold(
       appBar: CommonAppBar(
@@ -76,7 +78,11 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
         ),
         custom: Padding(
           padding: EdgeInsets.all(8.0),
-          child: (_currentState == ChatConversationState.loading) ? Text('') : Text(" " + widget.userChatting.toString(), style: TextStyle(fontSize: 24),),
+          child: (_currentState == ChatConversationState.loading) ?
+            Text('-') :
+          (firebaseUser.uid == widget.uidUser1) ?
+            Text(' ${widget.username1}', style: TextStyle(fontSize: 24)) :
+            Text(" ${widget.username2}", style: TextStyle(fontSize: 24)),
         ),
         //Agregar custom con nombre del usuario
       ),
@@ -137,7 +143,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                       elevation: 0,
                       onPressed: (){
                         context.read<AuthenticationService>()
-                        .sendMessage(idConversation, messageController.text, widget.uidCurrentUser);
+                        .sendMessage(idConversation, messageController.text, firebaseUser.uid);
                         setState(() {
                           _currentState = ChatConversationState.loading;
                         });

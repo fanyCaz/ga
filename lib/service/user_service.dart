@@ -23,7 +23,8 @@ class UserService{
           'name' : user.name,
           'type' : user.type,
           'username':user.username,
-          'email' : user.email
+          'email' : user.email,
+          'liked_posts': []
         }
       ).then((value) => response = value.id ).catchError((error) => print(error.toString()));
 
@@ -170,8 +171,10 @@ class UserService{
             )
       );
       print(likedTemp.runtimeType);
-      for(int i = 0; i < likedTemp.length; i++){
-        likedPosts.add(likedTemp[i]);
+      if(likedTemp != null) {
+        for (int i = 0; i < likedTemp.length; i++) {
+          likedPosts.add(likedTemp[i]);
+        }
       }
       return likedPosts;
     }catch(exception){
@@ -219,12 +222,20 @@ class UserService{
     return "200";
   }
 
-  Future<String> makeConversation(String uid1, String uid2) async {
+  Future<String> makeConversation(String uid1, String uid2, String username1, String username2) async {
     String response = "";
     bool exists = false;
     try {
       await _firestore.collection("Conversations")
           .where('uidUser1', isEqualTo: uid1).where('uidUser2', isEqualTo: uid2).limit(1)
+          .get().then((value) =>
+          value.docs.forEach((element) {
+            print(element.id);
+            response = element.id;
+            exists = element.exists;
+          }));
+      await _firestore.collection("Conversations")
+          .where('uidUser1', isEqualTo: uid2).where('uidUser2', isEqualTo: uid1).limit(1)
           .get().then((value) =>
           value.docs.forEach((element) {
             print(element.id);
@@ -238,6 +249,8 @@ class UserService{
             {
               'uidUser1': uid1,
               'uidUser2': uid2,
+              'usernameUser1': username1,
+              'usernameUser2': username2
             }
         ).then((value) => response = value.id).catchError((error) =>
             print(error.toString()));
@@ -311,26 +324,21 @@ class UserService{
   Future<List<Conversation>> getChats(String uid) async {
     List<Conversation> conversations = new List<Conversation>();
     List<String> ids = new List<String>();
-    GAUser talkingTo = new GAUser();
     try {
+      print("En get Chats user service" + uid);
       await _firestore.collection("Conversations")
         .where('uidUser1', isEqualTo: uid)
         .get()
         .then((QuerySnapshot querysnap) {
-          querysnap.docs.forEach((element) async {
-            if(uid == element.data()["uidUser1"]){
-              talkingTo = await usuarioActual( element.data()["uidUser2"] );
-            }else{
-              talkingTo = await usuarioActual( element.data()["uidUser1"] );
-            }
+          querysnap.docs.forEach((element) {
+            print(element);
           Conversation cnv = new Conversation(
             id: element.id,
             userId1: element.data()["uidUser1"],
             userId2: element.data()["uidUser2"],
-            whoImTalkingTo: talkingTo.username
+            usernameUser1: element.data()["usernameUser1"],
+            usernameUser2: element.data()["usernameUser2"]
           );
-            print("Elemento");
-            print(element.id);
           if(!ids.contains(element.id)){
             conversations.add(cnv);
             ids.add(element.id);
@@ -341,26 +349,21 @@ class UserService{
         .where('uidUser2', isEqualTo: uid)
         .get()
         .then((QuerySnapshot querysnap) {
-        querysnap.docs.forEach((element) async {
-          if(uid == element.data()["uidUser1"]){
-            talkingTo = await usuarioActual( element.data()["uidUser2"] );
-          }else{
-            talkingTo = await usuarioActual( element.data()["uidUser1"] );
-          }
+        querysnap.docs.forEach((element) {
           Conversation cnv = new Conversation(
             id: element.id,
             userId1: element.data()["uidUser1"],
             userId2: element.data()["uidUser2"],
-            whoImTalkingTo: talkingTo.username
+            usernameUser1: element.data()["usernameUser1"],
+            usernameUser2: element.data()["usernameUser1"]
           );
-          print("Elemento");
-          print(element.id);
           if(!ids.contains(element.id)){
             conversations.add(cnv);
             ids.add(element.id);
           }
         });
       });
+      return conversations;
     }catch(exception){
       print("Hubo error en get chats");
       print(exception);

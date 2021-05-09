@@ -36,7 +36,7 @@ class AuthenticationService{
   Future<GAUser> getCurrentUser() async {
     UserService us = new UserService();
     GAUser user = new GAUser();
-    user = (_firebaseAuth.currentUser != null ? us.usuarioActual(_firebaseAuth.currentUser.uid) : null) as GAUser;
+    user = await us.usuarioActual(_firebaseAuth.currentUser.uid);
     return user;
   }
 
@@ -119,10 +119,10 @@ class AuthenticationService{
     return "500";
   }
 
-  Future<String> addConversation(String uid1, String uid2) async {
+  Future<String> addConversation({String uid1, String uid2, String username1, String username2}) async {
     UserService us = new UserService();
     try {
-      String res = await us.makeConversation(uid1, uid2);
+      String res = await us.makeConversation(uid1, uid2, username1, username2);
       return res;
     }catch(exception){
       print("Hubo un error en add conversation");
@@ -162,7 +162,16 @@ class AuthenticationService{
 
   Future<List<Conversation>> getChatsUser(String  uid) async {
     UserService us = new UserService();
-    List<Conversation> conversations = await us.getChats(uid);
+    List<Conversation> conversations = new List<Conversation>();
+    try {
+      conversations = await us.getChats(uid);
+      print("en get chats user conversations");
+      print(conversations);
+      return conversations;
+    }catch(exception){
+      print("Hubo error en get chatsuser auth service");
+      print(exception);
+    }
     return conversations;
   }
 }

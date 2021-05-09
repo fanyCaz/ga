@@ -32,42 +32,24 @@ class _ChatPageState extends State<ChatPage> {
   void getChats(String uid) async {
     //await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
     currentConversations = await context.read<AuthenticationService>().getChatsUser(uid);
-
+    print("Get Chats dentro");
+    print(currentConversations);
     setState(() {
-      _currentState = (currentConversations != null) ? chatState.haveChats : chatState.doesntHaveChats;
+      _currentState = (currentConversations.length > 0) ?
+        chatState.haveChats : chatState.doesntHaveChats;
       veces = 1;
     });
   }
 
-  /*void getChats(String uid) async {
-    print("ESTAMOS EN CHAT");
-    await context.read<AuthenticationService>()
-        .haveChats()
-        .then((value) => haveChats = value);
-    if(haveChats) {
-      currentConversations =
-        await context.read<AuthenticationService>().getChatsUser(uid);
-      _currentState = chatState.haveChats;
-    }else{
-      _currentState = chatState.doesntHaveChats;
-    }
-    setState(() {
-      print("Lenght chats");
-      print(currentConversations.length);
-      print("Tiene chats");
-      print(haveChats);
-      _currentState = (haveChats) ? chatState.haveChats : chatState.doesntHaveChats;
-      veces = 1;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
+    print("En página chat");
     if(firebaseUser == null){
       return HomePage();
     }
     if (veces == 0) {
+      print("Manda a llamar get chats");
       getChats(firebaseUser.uid);
     }
     return Scaffold(
@@ -96,7 +78,7 @@ class _ChatPageState extends State<ChatPage> {
         child: (_currentState == chatState.doesntHaveChats) ?
         Column(
           children: [
-            Text(getTransValue(context, 'no-posts'))
+            Text(getTransValue(context, 'no-chats'))
           ],
         ): ListView.builder(
           itemCount: currentConversations.length,
@@ -120,9 +102,29 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildRow(Conversation cnv, String uidCurrentUser){
+    print("ROWWW");
+    print(cnv.id);
+    print(cnv.usernameUser1);
+    print(cnv.usernameUser2);
+    print(uidCurrentUser);
+    String userReceiver = "-";
+    String userCurrent = "-";
+    String uidReceiver = "-";
+    String uidCurrent = "-";
+    if(uidCurrentUser == cnv.userId1){
+      userCurrent = cnv.usernameUser1;
+      userReceiver = cnv.usernameUser2;
+      uidCurrent = cnv.userId1;
+      uidReceiver = cnv.userId2;
+    }else{
+      userCurrent = cnv.usernameUser2;
+      userReceiver = cnv.usernameUser1;
+      uidCurrent = cnv.userId2;
+      uidReceiver = cnv.userId1;
+    }
     return ListTile(
       dense: false,
-      title: Text(cnv.whoImTalkingTo),
+      title: Text(" $userReceiver"),
       trailing: Wrap(
         spacing: 12,
         children: [
@@ -138,9 +140,10 @@ class _ChatPageState extends State<ChatPage> {
           MaterialPageRoute(
             builder: (context) =>
               ChatConversationPage(
-                uidUserReceiver: cnv.userId1,
-                uidCurrentUser: cnv.userId2,
-                userChatting: cnv.whoImTalkingTo,
+                uidUser1: uidReceiver,
+                uidUser2: uidCurrent,
+                username1: userReceiver,
+                username2: userCurrent,
               )
           )
         );

@@ -39,9 +39,14 @@ class _upFeedPageState extends State<upFeedPage> {
   int veces = 0;
   List<Post> current_posts = new List<Post>();
   List<String> liked_posts = new List<String>();
+  String currentUsername = "";
   void getCurrentPosts(String firebaseUid) async {
     GAUser hola;
-    //await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
+    await context.read<AuthenticationService>()
+        .getCurrentUser()
+        .then((value) => currentUsername = value.username);
+    //GAUser hola;
+    //await context.read<AuthenticationService>().getCurrentUser().then((value){hola = value; currentUsername = hola.username; } );
     current_posts = await context.read<AuthenticationService>().getImagesFeed();
     current_posts.sort((a,b) => b.date.compareTo(a.date));
     liked_posts = await context.read<AuthenticationService>().pastLikedPosts(firebaseUid);
@@ -139,7 +144,7 @@ class _upFeedPageState extends State<upFeedPage> {
                   children: [
                     _listPhoto(current_posts[index], firebaseUser.uid),
                     Image.network(current_posts[index].image),
-                    _footerPhoto(context,current_posts[index].uid, firebaseUser.uid, current_posts[index].username),
+                    _footerPhoto(context,current_posts[index].uid,current_posts[index].username, firebaseUser.uid,currentUsername ),
                   ]
                 ),
               );
@@ -180,12 +185,12 @@ class _upFeedPageState extends State<upFeedPage> {
     );
   }
 
-  Widget _footerPhoto(BuildContext context, String userId, String currentUser, String username){
+  Widget _footerPhoto(BuildContext context, String uidUserPost, String usernamePost, String uidCurrentUser, String usernameCurrentUser){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          (currentUser != userId) ?
+          (uidCurrentUser != uidUserPost) ?
           ElevatedButton.icon(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
@@ -197,11 +202,16 @@ class _upFeedPageState extends State<upFeedPage> {
               Navigator.push(context,
                 MaterialPageRoute(
                   builder: (context) =>
-                    ChatConversationPage(uidUserReceiver: userId,uidCurrentUser: currentUser, userChatting: username,)
+                    ChatConversationPage(
+                      uidUser1: uidUserPost,
+                      uidUser2: uidCurrentUser,
+                      username1: usernamePost,
+                      username2: usernameCurrentUser,
+                    )
                 )
               );
             },
-          ): SizedBox(height: 10,)
+          ): SizedBox(height: 2,)
         ],
       ),
     );

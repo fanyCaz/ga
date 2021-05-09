@@ -27,7 +27,7 @@ class _ChooseProfilePageState extends State<ChooseProfilePage> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only( bottom: 20),
+                padding: EdgeInsets.only( bottom: MediaQuery.of(context).size.width * .1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
