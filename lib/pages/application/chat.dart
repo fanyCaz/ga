@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/conversation.dart';
-import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/application/chat_conversation.dart';
-import 'package:gallery_array/pages/application/chat_header.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';

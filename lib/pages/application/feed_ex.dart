@@ -1,11 +1,7 @@
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gallery_array/classes/ga_user.dart';
-import 'package:gallery_array/classes/photo.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/application/chat_conversation.dart';
@@ -14,8 +10,6 @@ import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
-import 'package:path/path.dart' as path;
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 enum FeedState{

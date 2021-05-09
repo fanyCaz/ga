@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/home_page.dart';
@@ -61,10 +60,6 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     if(_currentState == ChatConversationState.loading){
       loadConversation();
     }
-    print("user current" +  firebaseUser.uid);
-    print("Usernames");
-    print(widget.uidUser1);
-    print(widget.uidUser2);
     return Scaffold(
       appBar: CommonAppBar(
         title: '',
@@ -101,8 +96,6 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
               padding: EdgeInsets.only(top: 10, bottom: 10),
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index){
-                print("SENDER");
-                print(messages[index].uidSender);
                 return Container(
                   padding: EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
                   child: Align(
@@ -129,6 +122,11 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                 color: Colors.white,
                 child: Row(
                   children: [
+                    FloatingActionButton(
+                      child: Icon(Icons.videocam, color: Colors.white, size: 18),
+                      elevation: 0,
+                      onPressed: (){}
+                    ),
                     Expanded(
                       child: TextField(
                         controller: messageController,

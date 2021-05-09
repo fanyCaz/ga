@@ -15,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_array/classes/ga_user.dart';
+import 'package:watermark_shareable/watermark_shareable.dart';
+import 'package:path_provider/path_provider.dart' as pp;
 
 class UploadPage extends StatefulWidget {
   @override
@@ -27,22 +29,63 @@ class _UploadPageState extends State<UploadPage> {
   // Select and image from the gallery or take a picture with the camera
   // Then upload to Firebase Storage
   Future<void> _upload(String uid) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
     final picker = ImagePicker();
     PickedFile pickedImage;
+    var image2 = await picker.getImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920);
+    try {
+      var imgg = await WatermarkShareable.getPostWithWaterMark(
+          image2.path, "post");
+      var tempDir = (await pp.getTemporaryDirectory()).path;
+      var fileName = "${DateTime.now()}.png";
+
+      var imageFile = await File('$tempDir/$fileName').writeAsBytes(imgg);
+
+      var snapshot = await storage.ref('tes2t2eyddyan3do2.png').putFile(
+          imageFile,
+          SettableMetadata(customMetadata: {
+            'uploaded_by': 'mememeahora si??',
+          }));
+      imageUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+
+      });
+    }catch(exception){
+      print(exception);
+    }
+    /*final picker = ImagePicker();
+    var pickedImage;
     try {
       pickedImage = await picker.getImage(
           source: ImageSource.gallery,
           maxWidth: 1920);
       final String fileName = path.basename(pickedImage.path);
-      File imageFile = File(pickedImage.path);
+      print("LLEGA A FILE NAME");
+      //File imageFile = File(pickedImage.path);
 
+      var imgg = await WatermarkShareable.getPostWithWaterMark(
+          pickedImage.path, "post");
+      print("LLEGA AQUI EN WATERAMRKS");
+      //var tempDir = (await pp.getTemporaryDirectory()).path;
+      //var fileName = "${DateTime.now()}.png";
+
+      var imageFile = await File('$fileName').writeAsBytes(imgg);
+print("Llegara aqui");
       try {
-        // Uploading the selected image with some custom meta data
         var snapshot = await storage.ref(fileName).putFile(
+            imageFile,
+            //File(imajen),
+            SettableMetadata(customMetadata: {
+              'uploaded_by': 'mememeahora si??',
+            }));
+        // Uploading the selected image with some custom meta data
+        /*var snapshot = await storage.ref(fileName).putFile(
             imageFile,
             SettableMetadata(customMetadata: {
               'uploaded_by': uid,
-            }));
+            }));*/
         imageUrl = await snapshot.ref.getDownloadURL();
         // Refresh the UI
         setState(() {});
@@ -52,6 +95,8 @@ class _UploadPageState extends State<UploadPage> {
     } catch (err) {
       print(err);
     }
+
+     */
   }
 
   // Delete the selected image

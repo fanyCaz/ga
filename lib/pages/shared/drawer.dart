@@ -67,6 +67,18 @@ class _DrawerListState extends State<DrawerList> {
           ) : SizedBox(height: 10,),
           firebaseUser != null ? ListTile(
             leading: Icon(
+                Icons.question_answer,
+                color: Colors.white,
+                size: 30
+            ),
+            title: Text(getTransValue(context, 'chat'), style: _textStyle,),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, chat);
+            },
+          ) : SizedBox(height: 10,),
+          firebaseUser != null ? ListTile(
+            leading: Icon(
               Icons.logout,
               color: Colors.white,
               size: 30,
@@ -78,18 +90,16 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pushNamed(context,home);
             },
           ) : SizedBox(height: 10,),
-          firebaseUser != null ? ListTile(
+          ListTile(
             leading: Icon(
-              Icons.question_answer,
-              color: Colors.white,
-              size: 30
+              Icons.code
             ),
-            title: Text(getTransValue(context, 'chat'), style: _textStyle,),
+            title: Text('si if owkf'),
             onTap: (){
-              Navigator.pop(context);
-              Navigator.pushNamed(context, chat);
+              Navigator.of(context);
+              Navigator.pushNamed(context, a_probar);
             },
-          ): SizedBox(height: 10,),
+          )
         ],
       ),
     );

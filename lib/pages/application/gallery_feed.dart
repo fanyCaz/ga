@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as pp;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:watermark_shareable/watermark_shareable.dart';
 
 class GalleryWater extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class _GalleryWaterState extends State<GalleryWater> {
   File _originalImage;
   File _watermarkImage;
   File _watermarkedImage;
+  dynamic imajen;
   final picker = ImagePicker();
 
   Future getOriginalImage() async {
@@ -30,9 +36,7 @@ class _GalleryWaterState extends State<GalleryWater> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text("Watermark Example"),
         ),
@@ -60,10 +64,80 @@ class _GalleryWaterState extends State<GalleryWater> {
                   height: 50,
                 ),
 //<--------------- apply watermark over image ---------------->
-                (_originalImage != null) && (_watermarkImage != null)
+                (_originalImage != null)
                     ? FlatButton(
                   child: Text("Apply Watermark Over Image"),
                   onPressed: () async {
+                    FirebaseStorage storage = FirebaseStorage.instance;
+                    final picker = ImagePicker();
+                    PickedFile pickedImage;
+                    var image2 = await picker.getImage(
+                        source: ImageSource.gallery,
+                        maxWidth: 1920);
+                    try{
+                      var imgg = await WatermarkShareable.getPostWithWaterMark(
+                      image2.path, "post");
+                      var tempDir = (await pp.getTemporaryDirectory()).path;
+                      var fileName = "${DateTime.now()}.png";
+
+                      var imageFile = await File('$tempDir/$fileName').writeAsBytes(imgg);
+
+                      var snapshot = await storage.ref('tes2t2ean3do2.png').putFile(
+                          imageFile,
+                          //File(imajen),
+                          SettableMetadata(customMetadata: {
+                            'uploaded_by': 'mememeahora si??',
+                          }));
+                      setState(() {
+
+                        imajen = imgg;
+                      });
+                    }catch(exception){
+                      print("Error de watermakr");
+                      print(exception);
+                    }
+
+                    /*pickedImage = await picker.getImage(
+                        source: ImageSource.gallery,
+                        maxWidth: 1920);
+                    final String fileName = path.basename(pickedImage.path);
+                    File imageFile = File(pickedImage.path);
+
+
+                    FirebaseStorage storage = FirebaseStorage.instance;
+                    //img.Image image = img.Image(_originalImage.);
+                    //img.Image image = img.Image(320,240);
+
+
+                    img.Image image =  FileImage(_originalImage) as img.Image;//_originalImage as img.Image;
+                    img.fill(image, img.getColor(0,0,255));
+                    img.drawString(image,img.arial_24,20, 20, 'holiii');
+                    img.drawLine(image, 0, 0, 320, 420, img.getColor(255, 0, 0), thickness: 3);
+                    img.gaussianBlur(image, 10);
+                    Directory tempDir = await getTemporaryDirectory();
+                    String tempPath = tempDir.path;
+
+                    Directory appDocDir = await getApplicationDocumentsDirectory();
+                    await appDocDir.create(recursive: true);
+                    var dbPath = path.join(appDocDir.path, 'test.png');
+                    String appDocPath = appDocDir.path;
+                    print(dbPath);
+                    //_watermarkImage = img;
+                    //path.basename( dbPath);
+                    try {
+                      File(_originalImage.path).writeAsBytesSync(img.encodePng(image));
+                    }catch(exception){
+                      print(exception);
+                    }
+                    File imageeee = File(_originalImage.path);
+                    var snapshot = await storage.ref('tes2t2ean3do2.png').putFile(
+                        imageeee,
+                        SettableMetadata(customMetadata: {
+                          'uploaded_by': 'mememe',
+                        }));
+                    _watermarkImage = File(await snapshot.ref.getDownloadURL());
+
+
                     img.Image originalImage =
                     img.decodeImage(_originalImage.readAsBytesSync());
                     img.Image watermarkImage = img
@@ -98,19 +172,19 @@ print(wmImage);
                       print(_watermarkedImage);
                       Image.file(_watermarkedImage);
                     });
+                    */
                   },
                 )
                     : Container(),
 
 //<--------------- display watermarked image ---------------->
-                _watermarkedImage != null
-                    ? Image.file(_watermarkedImage)
+                imajen != null
+                    ? Image.memory(imajen)
                     : Container(),
               ],
             ),
           ),
         ),
-      ),
     );
   }
 }
