@@ -12,6 +12,7 @@ import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_array/classes/ga_user.dart';
@@ -32,71 +33,36 @@ class _UploadPageState extends State<UploadPage> {
     FirebaseStorage storage = FirebaseStorage.instance;
     final picker = ImagePicker();
     PickedFile pickedImage;
-    var image2 = await picker.getImage(
-        source: ImageSource.gallery,
-        maxWidth: 1920);
-    try {
-      var imgg = await WatermarkShareable.getPostWithWaterMark(
-          image2.path, "post");
-      var tempDir = (await pp.getTemporaryDirectory()).path;
-      var fileName = "${DateTime.now()}.png";
-
-      var imageFile = await File('$tempDir/$fileName').writeAsBytes(imgg);
-
-      var snapshot = await storage.ref('tes2t2eyddyan3do2.png').putFile(
-          imageFile,
-          SettableMetadata(customMetadata: {
-            'uploaded_by': 'mememeahora si??',
-          }));
-      imageUrl = await snapshot.ref.getDownloadURL();
-      setState(() {
-
-      });
-    }catch(exception){
-      print(exception);
-    }
-    /*final picker = ImagePicker();
-    var pickedImage;
-    try {
-      pickedImage = await picker.getImage(
+    await Permission.photos.request();
+    var permissionStatus = await Permission.photos.status;
+    if (permissionStatus.isGranted){
+      var image2 = await picker.getImage(
           source: ImageSource.gallery,
           maxWidth: 1920);
-      final String fileName = path.basename(pickedImage.path);
-      print("LLEGA A FILE NAME");
-      //File imageFile = File(pickedImage.path);
-
-      var imgg = await WatermarkShareable.getPostWithWaterMark(
-          pickedImage.path, "post");
-      print("LLEGA AQUI EN WATERAMRKS");
-      //var tempDir = (await pp.getTemporaryDirectory()).path;
-      //var fileName = "${DateTime.now()}.png";
-
-      var imageFile = await File('$fileName').writeAsBytes(imgg);
-print("Llegara aqui");
       try {
+        var imgg = await WatermarkShareable.getPostWithWaterMark(
+            image2.path, "post");
+        var tempDir = (await pp.getTemporaryDirectory()).path;
+        var fileName = "${DateTime.now()}.png";
+
+        var imageFile = await File('$tempDir/$fileName').writeAsBytes(imgg);
+
         var snapshot = await storage.ref(fileName).putFile(
             imageFile,
-            //File(imajen),
             SettableMetadata(customMetadata: {
-              'uploaded_by': 'mememeahora si??',
+              'uploaded': 'yes',
             }));
-        // Uploading the selected image with some custom meta data
-        /*var snapshot = await storage.ref(fileName).putFile(
-            imageFile,
-            SettableMetadata(customMetadata: {
-              'uploaded_by': uid,
-            }));*/
         imageUrl = await snapshot.ref.getDownloadURL();
-        // Refresh the UI
-        setState(() {});
-      } on FirebaseException catch (error) {
-        print(error);
+        setState(() {
+
+        });
+      }catch(exception){
+        print(exception);
       }
-    } catch (err) {
-      print(err);
+    }else{
+      print('necesita permisos');
     }
 
-     */
   }
 
   // Delete the selected image
@@ -120,7 +86,6 @@ print("Llegara aqui");
     setState(() {
       veces = 1;
       usernameNow = hola.username;
-      print(usernameNow);
     });
   }
 
@@ -198,12 +163,6 @@ print("Llegara aqui");
 
   Future<File> getWatermarkFile() async {
     String path = 'lib/images/watermark.png';
-    /*final byteDae = await rootBundle.load('lib/images/watermark.png');
-    var pathNow = (await getTemporaryDirectory()).path;
-
-    final file = File('$pathNow/$path');
-    await file.writeAsBytes(byteDae.buffer.asUint8List(byteDae.offsetInBytes, byteDae.lengthInBytes));
-    return file;*/
     final byteData = await rootBundle.load('lib/images/watermark.png');
 
     final tempFile =
@@ -220,65 +179,3 @@ print("Llegara aqui");
     context.read<AuthenticationService>().confirmUploadPhoto(uid, image, description, 0, username, date);
   }
 }
-  // Select and image from the gallery or take a picture with the camera
-  // Then upload to Firebase Storage
-
-/*
-  uploadImage(String uid) async {
-
-    final _storage = FirebaseStorage.instance;
-    final _picker = ImagePicker();
-    PickedFile image;
-
-    //Check Permissions
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-
-    if (permissionStatus.isGranted){
-      //Select Image
-      image = await _picker.getImage(source: ImageSource.gallery);
-      _originalImage = File(image.path);
-      print(_originalImage);
-/*
-      ui.Image image_original = ui.decodeImage(_originalImage.readAsBytesSync());
-
-      _watermarkImage = await getWatermarkFile();
-      ui.Image watermarkImage = ui.decodeImage( _watermarkImage.readAsBytesSync() );
-
-      ui.Image _image = ui.Image(100,50);
-      ui.drawImage(_image, watermarkImage);
-
-      ui.copyInto(image_original, _image, dstX: image_original.width - 100 - 25, dstY: image_original.height- 50 -25);
-      ui.drawString(image_original, ui.arial_24, 100, 120, 'gallery array');
-
-      List<int> wmImage = ui.encodePng(image_original);
-      setState(() {
-        _watermarkedImage = File.fromRawPath(Uint8List.fromList(wmImage));
-      });
-
- */
-      var rng = new Random();
-
-      if (image != null){
-        //Upload to Firebase
-        var snapshot = await _storage.ref()
-            .child(uid+'/'+rng.nextInt(10000).toString())
-            .putFile(_originalImage);
-
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-
-        setState(() {
-          imageUrl = downloadUrl;
-        });
-      } else {
-        print('No Path Received');
-      }
-
-    } else {
-      print('Grant Permissions and try again');
-    }
-
-  }
-}
-*/
