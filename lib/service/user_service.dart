@@ -222,6 +222,23 @@ class UserService{
     return "200";
   }
 
+  Future<int> countPhotoOfUser(String uid) async {
+    int numberPosts = 0;
+    try{
+      await _firestore.collection("Post")
+          .where('uid', isEqualTo: uid)
+          .get()
+          .then((value) {
+            numberPosts = value.docs.length;
+          });
+      return numberPosts;
+    }catch(exception){
+      print("En count photos of user");
+      print(exception);
+    }
+    return 0;
+  }
+
   Future<String> makeConversation(String uid1, String uid2, String username1, String username2) async {
     String response = "";
     bool exists = false;
@@ -313,7 +330,6 @@ class UserService{
       await _firestore.collection("Conversations")
           .where('uidUser1', isEqualTo: uid).limit(1).get().then((value) =>
           value.docs.forEach((element) {
-            print(element.id);
             response = element.exists;
           }));
       return response;
@@ -326,13 +342,11 @@ class UserService{
     List<Conversation> conversations = new List<Conversation>();
     List<String> ids = new List<String>();
     try {
-      print("En get Chats user service" + uid);
       await _firestore.collection("Conversations")
         .where('uidUser1', isEqualTo: uid)
         .get()
         .then((QuerySnapshot querysnap) {
           querysnap.docs.forEach((element) {
-            print(element);
           Conversation cnv = new Conversation(
             id: element.id,
             userId1: element.data()["uidUser1"],

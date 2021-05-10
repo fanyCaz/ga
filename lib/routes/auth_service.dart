@@ -119,6 +119,17 @@ class AuthenticationService{
     return "500";
   }
 
+  Future<int> getNumberPhotos(String uid) async {
+    UserService us = new UserService();
+    try{
+      return await us.countPhotoOfUser(uid);
+    }catch(exception){
+      print("Hubo error en get number photos");
+      print(exception);
+    }
+    return 0;
+  }
+
   Future<String> addConversation({String uid1, String uid2, String username1, String username2}) async {
     UserService us = new UserService();
     try {

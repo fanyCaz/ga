@@ -6,6 +6,7 @@ import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -18,9 +19,12 @@ class _ProfilePageState extends State<ProfilePage> {
   String usernameNow = "";
   String typeNow = "";
   String emailNow = "";
-  void getUserNow() async {
+  int numberPhotos = 0;
+  void getUserNow(String uid) async {
     GAUser hola;
     var currentUser = await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
+    numberPhotos = await context.read<AuthenticationService>()
+        .getNumberPhotos(uid);
     setState(() {
       veces = 1;
       usernameNow = hola.username;
@@ -31,8 +35,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
     if(veces == 0) {
-      getUserNow();
+      getUserNow(firebaseUser.uid);
     }
     return Scaffold(
       appBar: CommonAppBar(
@@ -108,8 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            //HACER BÚSQUEDA DE CUANTAS FOTOS TIENEN SU UID
-                            Text('0',
+                            Text(' $numberPhotos',
                               style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
                             ),
                             Text(getTransValue(context,'number-photos'),

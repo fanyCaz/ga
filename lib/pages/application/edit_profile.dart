@@ -20,7 +20,7 @@ class _EditProfileState extends State<EditProfile> {
 
   void getUserNow() async {
     GAUser hola;
-    var currentUser = await context.read<AuthenticationService>()
+    await context.read<AuthenticationService>()
         .getCurrentUser()
         .then((value) => hola = value);
         setState(() {
@@ -49,15 +49,15 @@ class _EditProfileState extends State<EditProfile> {
           appBar: AppBar(),
           canGoBack: true,
           logout: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  context.read<AuthenticationService>().signOut();
-                  Navigator.pushNamed(context, home);
-                },
-                color: Colors.white,
-                icon: Icon(Icons.logout),
-              )
+            padding: EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () {
+                context.read<AuthenticationService>().signOut();
+                Navigator.pushNamed(context, home);
+              },
+              color: Colors.white,
+              icon: Icon(Icons.logout),
+            )
           ),
         ),
         body: Padding(
