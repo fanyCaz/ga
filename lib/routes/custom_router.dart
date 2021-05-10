@@ -51,6 +51,7 @@ class CustomRouter{
       //El case de chat conversation se queda manual en las vistas
       case a_probar:
         return MaterialPageRoute(builder: (_) => AgoraExample());
+      default:
     }
     return MaterialPageRoute(builder: (_) => NotFoundPage());
   }

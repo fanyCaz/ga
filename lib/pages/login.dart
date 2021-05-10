@@ -113,6 +113,10 @@ class _LogInPageState extends State<LogInPage> {
                     }
                   },
                   child: Text( getTransValue(context, 'btn_login') ),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(MediaQuery.of(context).size.width,50),
+                    primary: Color(0xFF7B39ED),
+                  ),
                 ),
               ],
             ),

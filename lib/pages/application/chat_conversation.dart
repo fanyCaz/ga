@@ -123,6 +123,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                 child: Row(
                   children: [
                     FloatingActionButton(
+                      heroTag: 'send-videocall',
                       child: Icon(Icons.videocam, color: Colors.white, size: 18),
                       elevation: 0,
                       onPressed: (){}
@@ -138,6 +139,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                     ),
                     SizedBox(width: 15,),
                     FloatingActionButton(
+                      heroTag: 'send-message',
                       child: Icon(Icons.send, color: Colors.white, size: 18),
                       elevation: 0,
                       onPressed: (){
