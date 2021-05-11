@@ -90,16 +90,6 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pushNamed(context,home);
             },
           ) : SizedBox(height: 10,),
-          ListTile(
-            leading: Icon(
-              Icons.code
-            ),
-            title: Text('si if owkf'),
-            onTap: (){
-              Navigator.of(context);
-              Navigator.pushNamed(context, a_probar);
-            },
-          )
         ],
       ),
     );

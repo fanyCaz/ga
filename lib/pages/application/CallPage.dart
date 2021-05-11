@@ -128,7 +128,6 @@ class _CallPageState extends State<CallPage> {
         child: Stack(
           children: [
             _viewRows(),
-            _panel(),
             _toolbar()
           ],
         ),
@@ -172,7 +171,7 @@ class _CallPageState extends State<CallPage> {
           child: Column(
             children: [
               _expandedVideoRow([views[0]]),
-              _expandedVideoRow([views[0]])
+              _expandedVideoRow([views[1]])
             ],
           ),
         );

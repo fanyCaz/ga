@@ -5,6 +5,7 @@ import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/utils.dart';
+import 'package:gallery_array/classes/call.dart';
 
 bool USE_FIRESTORE_EMULATOR = false;
 
@@ -384,5 +385,34 @@ class UserService{
       print(exception);
     }
     return conversations;
+  }
+
+  Future<bool> makeCall({Call call}) async {
+    
+    try {
+      call.hasDialled = true;
+      Map<String, dynamic> hasDialledMap = call.toMap(call);
+
+      call.hasDialled = false;
+      Map<String, dynamic> hasNotDialledMap = call.toMap(call);
+
+      await _firestore.collection("Call").doc(call.callerId).set(hasDialledMap);
+      await _firestore.collection("Call").doc(call.receiverId).set(hasNotDialledMap);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> endCall({Call call}) async {
+    try {
+      await _firestore.collection("Call").doc(call.callerId).delete();
+      await _firestore.collection("Call").doc(call.receiverId).delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

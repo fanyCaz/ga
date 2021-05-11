@@ -4,6 +4,7 @@ import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/user_service.dart';
+import 'package:gallery_array/classes/call.dart';
 
 class AuthenticationService{
   //to firebase
@@ -184,5 +185,18 @@ class AuthenticationService{
       print(exception);
     }
     return conversations;
+  }
+
+  Future<bool> endingCall({Call call}) async {
+    UserService us = new UserService();
+    try{
+      bool callEnded = await us.endCall(call: call);
+      return callEnded;
+    }catch(exception){
+      print("Error en ending call");
+      print(exception);
+    }
+    return false;
+    
   }
 }
