@@ -15,6 +15,12 @@ class _AgoraExampleState extends State<AgoraExample> {
   //final PermissionHandler _permissionHandler = PermissionHandler();
 
   @override
+  void dispose(){
+    txtController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,

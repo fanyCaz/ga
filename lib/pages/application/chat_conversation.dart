@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/application/CallPage.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:gallery_array/pages/utils/AppID.dart';
 
 enum ChatConversationState{
   loading,
@@ -43,7 +46,6 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     messages.sort((a,b) => a.date.compareTo(b.date));
     hasMessages = messages.length > 0;
     //messages
-    print(widget.username1);
     setState(() {
       _currentState = (hasMessages) ?
         ChatConversationState.hasMessages :
@@ -126,7 +128,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                       heroTag: 'send-videocall',
                       child: Icon(Icons.videocam, color: Colors.white, size: 18),
                       elevation: 0,
-                      onPressed: (){}
+                      onPressed: onJoin,
                     ),
                     Expanded(
                       child: TextField(
@@ -158,5 +160,19 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
           ]
         ),
     );
+  }
+
+  Future<void> onJoin() async {
+    await Permission.camera.request();
+    await Permission.microphone.request();
+    var permissionCameraStatus = await Permission.camera.status;
+    var permissionMicrophoneStatus = await Permission.microphone.status;
+
+    if(permissionMicrophoneStatus.isGranted && permissionCameraStatus.isGranted){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CallPage(channelName: channelName1))
+      );
+    }
   }
 }
