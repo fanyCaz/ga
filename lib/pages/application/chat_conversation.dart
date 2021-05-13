@@ -25,8 +25,9 @@ class ChatConversationPage extends StatefulWidget {
   final String uidUser2;
   final String username1;
   final String username2;
+  final String idConversation;
 
-  const ChatConversationPage({Key key, this.uidUser1, this.uidUser2, this.username1, this.username2, }) : super(key: key);
+  const ChatConversationPage({Key key, this.uidUser1, this.uidUser2, this.username1, this.username2, this.idConversation}) : super(key: key);
 
   @override
   _ChatConversationPageState createState() => _ChatConversationPageState();
@@ -42,8 +43,12 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
 
   void loadConversation() async {
     print("ESTAMOS EN CHAT CONVERSATION");
-    idConversation = await context.read<AuthenticationService>().addConversation(uid1: widget.uidUser1, uid2: widget.uidUser2, username1: widget.username1, username2: widget.username2);
+    //idConversation = await context.read<AuthenticationService>()
+    // .addConversation(uid1: widget.uidUser1, uid2: widget.uidUser2, username1: widget.username1, username2: widget.username2);
+    idConversation = widget.idConversation;
     messages = await context.read<AuthenticationService>().getMessagesFromConversation(idConversation);
+    await context.read<AuthenticationService>().deleteNotifs(idConversation, widget.uidUser1);
+    await context.read<AuthenticationService>().deleteNotifs(idConversation, widget.uidUser2);
     messages.sort((a,b) => a.date.compareTo(b.date));
     hasMessages = messages.length > 0;
     //messages
@@ -54,15 +59,9 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     });
   }
 
-  ScrollController _scrollController;
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.
-        animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 20), curve: Curves.ease);
-    });
   }
 
   @override
@@ -101,9 +100,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
       drawer: DrawerList(),
       body: (_currentState == ChatConversationState.loading) ?
         Center( child: CircularProgressIndicator() ) :
-      SingleChildScrollView(
-        controller: _scrollController,
-          child: Column(
+         Stack(
             children: [
               (_currentState == ChatConversationState.hasMessages) ?
               ListView.builder(
@@ -115,7 +112,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                   return Container(
                     padding: EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
                     child: Align(
-                      alignment: (messages[index].uidSender == firebaseUser.uid) ?
+                      alignment: (messages[index].uidSender == widget.uidUser2) ?
                         Alignment.topRight : Alignment.topLeft,
                       child: Container(
                         decoration: BoxDecoration(
@@ -191,7 +188,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
               ),
             ]
           ),
-        ),
+
     );
   }
 

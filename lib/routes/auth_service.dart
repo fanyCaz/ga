@@ -162,6 +162,16 @@ class AuthenticationService{
     return messages;
   }
 
+  Future<void> deleteNotifs(String idConversation, String uidReceiver) async {
+    UserService us = new UserService();
+    try {
+      await us.deleteNotification(idConversation, uidReceiver);
+    }catch(exception){
+      print("Hubo problema en delete notifs auth service");
+      print(exception);
+    }
+  }
+
   Future<bool> haveChats({String uid}) async {
     UserService us = new UserService();
     bool response = false;

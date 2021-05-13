@@ -116,6 +116,9 @@ class _ChatPageState extends State<ChatPage> {
       uidCurrent = cnv.userId1;
       uidReceiver = cnv.userId2;
       currentNotification.forEach((element) {
+        print("RECEIVER");
+        print(element.id);
+        print(element.uidReceiver);
         if(element.uidReceiver == uidCurrent){
           hasNotification = true;
         }
@@ -126,7 +129,10 @@ class _ChatPageState extends State<ChatPage> {
       uidCurrent = cnv.userId2;
       uidReceiver = cnv.userId1;
       currentNotification.forEach((element) {
-        if(element.uidReceiver == uidReceiver){
+        print("RECEIVER");
+        print(element.id);
+        print(element.uidReceiver);
+        if(element.uidReceiver == uidCurrent){
           hasNotification = true;
         }
       });
@@ -155,6 +161,7 @@ class _ChatPageState extends State<ChatPage> {
               uidUser2: uidCurrent,
               username1: userReceiver,
               username2: userCurrent,
+              idConversation: cnv.id,
             )
           )
         );

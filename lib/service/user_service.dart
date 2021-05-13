@@ -138,13 +138,13 @@ class UserService{
           .then((QuerySnapshot querysnap) {
             querysnap.docs.forEach((element) {
               Post pst = new Post(
-                  id: element.id,
-                  image: element["image"],
-                  description: element["description"],
-                  uid: element["uid"],
-                  likes: element["likes"],
-                  username: element["username"],
-                  date: element["date"].toDate()
+                id: element.id,
+                image: element["image"],
+                description: element["description"],
+                uid: element["uid"],
+                likes: element["likes"],
+                username: element["username"],
+                date: element["date"].toDate()
           );
           if (pst != null) {
             posts.add(pst);
@@ -303,6 +303,23 @@ class UserService{
       print(exception);
     }
   }
+  
+  Future<void> deleteNotification(String idConversation, String uidReceiver) async {
+    String idNotif = "";
+    try{
+      await _firestore.collection("Notifications")
+          .where('idConversation', isEqualTo: idConversation)
+          .where('uidReceiver', isEqualTo: uidReceiver)
+          .get().then((value) =>
+          value.docs.forEach((element) {
+            idNotif = element.id;
+          }));
+        await _firestore.collection("Notifications").doc(idNotif).delete();
+    }catch(exception){
+      print("Hubo error en delete notification user service");
+      print(exception);
+    }
+  }
 
   Future<List<Message>> getMessagesFeed(String idConversation) async {
     List<Message> messages = new List<Message>();
@@ -354,7 +371,7 @@ class UserService{
         value.docs.forEach((element) {
           GANotification notif = new GANotification(
             id: element["idConversation"],
-            uidReceiver: uid,
+            uidReceiver: element["uidReceiver"],
             read: element["read"]
           );
           notification.add(notif);
