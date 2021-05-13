@@ -62,11 +62,11 @@ class _PickUpPageState extends State<PickUpPage> {
                     var permissionMicrophoneStatus = await Permission.microphone.status;
 
                     if(permissionMicrophoneStatus.isGranted && permissionCameraStatus.isGranted){
-                      Navigator.push(
+                    /*  Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) =>
                               CallPage(call: widget.call))
-                      );
+                      );*/
                     }
                   }
                 ),

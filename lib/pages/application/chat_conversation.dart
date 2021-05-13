@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/application/CallPage.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
-import 'package:gallery_array/pages/utils/call_methods.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -54,6 +54,17 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     });
   }
 
+  ScrollController _scrollController;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.
+        animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 20), curve: Curves.ease);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
@@ -90,92 +101,112 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
       drawer: DrawerList(),
       body: (_currentState == ChatConversationState.loading) ?
         Center( child: CircularProgressIndicator() ) :
-        Stack(
-          children: [
-            (_currentState == ChatConversationState.hasMessages) ?
-            ListView.builder(
-              itemCount: messages.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index){
-                return Container(
-                  padding: EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
-                  child: Align(
-                    alignment: (messages[index].uidSender == firebaseUser.uid) ?
-                      Alignment.topRight : Alignment.topLeft,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: (messages[index].uidSender == firebaseUser.uid ? Colors.grey.shade200 : Colors.blue[200]),
+      SingleChildScrollView(
+        controller: _scrollController,
+          child: Column(
+            children: [
+              (_currentState == ChatConversationState.hasMessages) ?
+              ListView.builder(
+                itemCount: messages.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index){
+                  return Container(
+                    padding: EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
+                    child: Align(
+                      alignment: (messages[index].uidSender == firebaseUser.uid) ?
+                        Alignment.topRight : Alignment.topLeft,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: (messages[index].uidSender == firebaseUser.uid ? Colors.grey.shade200 : Colors.blue[200]),
+                        ),
+                        child: (messages[index].message.contains("Videollamada:")) ?
+                          InkWell(
+                            child: Text(getTransValue(context,'join-video'), style: TextStyle(color: Colors.blueAccent),),
+                            onTap: (){
+                              print("Hasta video");
+                              onJoin();
+                            },
+                          ) :
+                          Text(messages[index].message),
+                        padding: EdgeInsets.all(16),
                       ),
-                      child: Text(messages[index].message),
-                      padding: EdgeInsets.all(16),
-                    ),
-                  )
-                );
-              }
-            ) : Center(child: Text(getTransValue(context, 'no-messages')),),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                height: 60,
-                width: double.infinity,
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    FloatingActionButton(
-                      heroTag: 'send-videocall',
-                      child: Icon(Icons.videocam, color: Colors.white, size: 18),
-                      elevation: 0,
-                      onPressed: (){
-                        if (firebaseUser.uid == widget.uidUser1){
-                          CallUtils.dial(
-                            fromUid: widget.uidUser1, fromUsername: widget.username1,
-                            toUid: widget.uidUser2, toUsername: widget.username2,
-                            context: context
-                          );
-                        }else{
-                          CallUtils.dial(
-                            fromUid: widget.uidUser2, fromUsername: widget.username2,
-                            toUid: widget.uidUser1, toUsername: widget.username1,
-                            context: context
-                          );
-                        }
-                      },
-                      //onPressed: onJoin,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: messageController,
-                        decoration: InputDecoration(
-                          hintText: getTransValue(context, 'send-conversation-message'),
-                          border: OutlineInputBorder(),
+                    )
+                  );
+                }
+              ) : Center(child: Text(getTransValue(context, 'no-messages')),),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                  height: 60,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      FloatingActionButton(
+                        heroTag: 'send-videocall',
+                        child: Icon(Icons.videocam, color: Colors.white, size: 18),
+                        elevation: 0,
+                        onPressed: (){
+                          String receiver = widget.uidUser2;
+                          if(firebaseUser.uid == widget.uidUser1){
+                            receiver = widget.uidUser1;
+                          }
+                          sendAMessage(messageLink: "Videollamada: $channelName1", uidSender: firebaseUser.uid, uidReceiver: receiver);
+                          /*sendAMessage(
+                            uidSender: firebaseUser.uid,
+                            messageLink: "Videollamada: $channelName1"
+                          );*/
+                          onJoin();
+                        },
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: messageController,
+                          decoration: InputDecoration(
+                            hintText: getTransValue(context, 'send-conversation-message'),
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 15,),
-                    FloatingActionButton(
-                      heroTag: 'send-message',
-                      child: Icon(Icons.send, color: Colors.white, size: 18),
-                      elevation: 0,
-                      onPressed: (){
-                        context.read<AuthenticationService>()
-                        .sendMessage(idConversation, messageController.text, firebaseUser.uid);
-                        setState(() {
-                          messageController.clear();
-                          _currentState = ChatConversationState.loading;
-                        });
-                      }
-                    ),
-                  ]
+                      SizedBox(width: 15,),
+                      FloatingActionButton(
+                        heroTag: 'send-message',
+                        child: Icon(Icons.send, color: Colors.white, size: 18),
+                        elevation: 0,
+                        onPressed: (){
+                          String receiver = widget.uidUser2;
+                          if(firebaseUser.uid == widget.uidUser1){
+                            receiver = widget.uidUser1;
+                          }
+                          sendAMessage(uidSender: firebaseUser.uid, uidReceiver: receiver);
+                        }
+                      ),
+                    ]
+                  ),
                 ),
               ),
-            ),
-          ]
+            ]
+          ),
         ),
     );
+  }
+
+  Future<void> sendAMessage({String uidSender, String messageLink = "", String uidReceiver}) async {
+    if(messageLink != ""){
+      await context.read<AuthenticationService>()
+        .sendMessage(idConversation, messageLink, uidSender, uidReceiver);
+    }else {
+      await context.read<AuthenticationService>()
+          .sendMessage(idConversation, messageController.text, uidSender, uidReceiver);
+    }
+    setState(() {
+      messageController.clear();
+      _currentState = ChatConversationState.loading;
+    });
   }
 
   Future<void> onJoin() async {
@@ -185,7 +216,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     var permissionMicrophoneStatus = await Permission.microphone.status;
 
     if(permissionMicrophoneStatus.isGranted && permissionCameraStatus.isGranted){
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(channelName: channelName1)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(channelName: channelName1)));
     }
   }
 }

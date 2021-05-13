@@ -43,5 +43,6 @@
   "send-conversation-message": "Mensagem",
   "no-messages": "Você não tem mensagens",
   "no-chats": "Você não tem bate-papos",
-  "invalid-password": "Credenciais não válidas"
+  "invalid-password": "Credenciais não válidas",
+  "join-video": "Entrar na videochamada"
 }

@@ -43,5 +43,6 @@
   "send-conversation-message": "Mensaje",
   "no-messages": "No tienes mensajes",
   "no-chats": "No tienes conversaciones",
-  "invalid-password": "Credenciales inválidas"
+  "invalid-password": "Credenciales inválidas",
+  "join-video": "Únete a la llamada"
 }

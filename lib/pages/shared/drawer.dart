@@ -91,19 +91,6 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pushNamed(context,home);
             },
           ) : SizedBox(height: 10,),
-          ListTile(
-            leading: Icon(
-              Icons.code,
-              color: Colors.white,
-              size: 30,
-            ),
-            title: Text('Sii if ijt wokds'),
-            onTap: (){
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => PickUpPage(call: null)));
-            },
-          )
         ],
       ),
     );

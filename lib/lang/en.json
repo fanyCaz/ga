@@ -43,5 +43,6 @@
   "send-conversation-message": "Message",
   "no-messages": "You have no messages",
   "no-chats": "You have no chats",
-  "invalid-password": "Not valid credentials"
+  "invalid-password": "Not valid credentials",
+  "join-video": "Join the video call"
 }

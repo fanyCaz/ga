@@ -143,10 +143,10 @@ class AuthenticationService{
     return "500";
   }
 
-  Future<void> sendMessage(String idConversation, String message, String uidSender) async {
+  Future<void> sendMessage(String idConversation, String message, String uidSender, String uidReceiver) async {
     DateTime hoy = DateTime.now();
     UserService us = new UserService();
-    us.sendMessage(idConversation, message, hoy, uidSender);
+    us.sendMessage(idConversation, message, hoy, uidSender, uidReceiver);
   }
 
   Future<List<Message>> getMessagesFromConversation(String idConversation) async {

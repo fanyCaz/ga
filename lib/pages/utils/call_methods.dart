@@ -25,10 +25,10 @@ class CallUtils{
     call.hasDialled = true;
 
     if(callMade){
-      Navigator.push(
+      /*Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CallPage(call: call,))
-      );
+      );*/
     }
   }
 }

@@ -281,7 +281,7 @@ class UserService{
     }
   }
 
-  Future<void> sendMessage(String idConversation, String message, DateTime date, String uidSender) async {
+  Future<void> sendMessage(String idConversation, String message, DateTime date, String uidSender, String uidReceiver) async {
     String response = "";
     try {
       await _firestore.collection("Messages")
@@ -290,8 +290,12 @@ class UserService{
           'idConversation': idConversation,
           'date': date,
           'uidSender': uidSender
-        }).then((value) => response = value.id).catchError((error) =>
-        print(error.toString()));
+        }).then((value) => response = value.id).catchError((error) => print(error.toString()));
+      await _firestore.collection("Notification")
+        .add({
+          'uidReceiver': uidReceiver,
+          'read': false
+        }).then((value) => response = value.id).catchError((error) => print(error.toString()));
     }catch(exception){
       print("Hubo error en send message");
       print(exception);
