@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_array/classes/conversation.dart';
+import 'package:gallery_array/classes/notification.dart';
 import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/pages/application/chat_conversation.dart';
 import 'package:gallery_array/pages/home_page.dart';
@@ -27,11 +28,10 @@ class _ChatPageState extends State<ChatPage> {
   bool haveChats = false;
 
   List<Conversation> currentConversations = new List<Conversation>();
+  List<GANotification> currentNotification = new List<GANotification>();
   void getChats(String uid) async {
-    //await context.read<AuthenticationService>().getCurrentUser().then((value) => hola = value );
     currentConversations = await context.read<AuthenticationService>().getChatsUser(uid);
-    print("Get Chats dentro");
-    print(currentConversations);
+    currentNotification = await context.read<AuthenticationService>().getNotifs(uid);
     setState(() {
       _currentState = (currentConversations.length > 0) ?
         chatState.haveChats : chatState.doesntHaveChats;
@@ -100,6 +100,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildRow(Conversation cnv, String uidCurrentUser){
+    bool hasNotification = false;
     print("ROWWW");
     print(cnv.id);
     print(cnv.usernameUser1);
@@ -114,14 +115,26 @@ class _ChatPageState extends State<ChatPage> {
       userReceiver = cnv.usernameUser2;
       uidCurrent = cnv.userId1;
       uidReceiver = cnv.userId2;
+      currentNotification.forEach((element) {
+        if(element.uidReceiver == uidCurrent){
+          hasNotification = true;
+        }
+      });
     }else{
       userCurrent = cnv.usernameUser2;
       userReceiver = cnv.usernameUser1;
       uidCurrent = cnv.userId2;
       uidReceiver = cnv.userId1;
+      currentNotification.forEach((element) {
+        if(element.uidReceiver == uidReceiver){
+          hasNotification = true;
+        }
+      });
     }
     return ListTile(
       dense: false,
+      leading: (hasNotification) ?
+        Icon(Icons.mark_chat_unread, color: Colors.redAccent) : Icon(Icons.chat_bubble),
       title: Text(" $userReceiver"),
       trailing: Wrap(
         spacing: 12,
@@ -137,12 +150,12 @@ class _ChatPageState extends State<ChatPage> {
         Navigator.push(context,
           MaterialPageRoute(
             builder: (context) =>
-              ChatConversationPage(
-                uidUser1: uidReceiver,
-                uidUser2: uidCurrent,
-                username1: userReceiver,
-                username2: userCurrent,
-              )
+            ChatConversationPage(
+              uidUser1: uidReceiver,
+              uidUser2: uidCurrent,
+              username1: userReceiver,
+              username2: userCurrent,
+            )
           )
         );
       },

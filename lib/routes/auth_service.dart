@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gallery_array/classes/conversation.dart';
 import 'package:gallery_array/classes/ga_user.dart';
 import 'package:gallery_array/classes/message.dart';
+import 'package:gallery_array/classes/notification.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/user_service.dart';
 import 'package:gallery_array/classes/call.dart';
@@ -185,6 +186,19 @@ class AuthenticationService{
       print(exception);
     }
     return conversations;
+  }
+
+  Future<List<GANotification>> getNotifs(String uid) async {
+    UserService us = new UserService();
+    List<GANotification> notifications = new List<GANotification>();
+    try{
+      notifications = await us.getNotifications(uid);
+      return notifications;
+    }catch(exception){
+      print("Hubo error en get notifs auth service");
+      print(exception);
+      return notifications;
+    }
   }
 
   Future<bool> endingCall({Call call}) async {

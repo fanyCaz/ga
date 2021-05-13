@@ -6,6 +6,7 @@ import 'package:gallery_array/classes/message.dart';
 import 'package:gallery_array/classes/post.dart';
 import 'package:gallery_array/service/utils.dart';
 import 'package:gallery_array/classes/call.dart';
+import 'package:gallery_array/classes/notification.dart';
 
 bool USE_FIRESTORE_EMULATOR = false;
 
@@ -291,8 +292,9 @@ class UserService{
           'date': date,
           'uidSender': uidSender
         }).then((value) => response = value.id).catchError((error) => print(error.toString()));
-      await _firestore.collection("Notification")
+      await _firestore.collection("Notifications")
         .add({
+          'idConversation': idConversation,
           'uidReceiver': uidReceiver,
           'read': false
         }).then((value) => response = value.id).catchError((error) => print(error.toString()));
@@ -340,6 +342,29 @@ class UserService{
       return response;
     }catch(Exception){
       return response;
+    }
+  }
+
+  Future<List<GANotification>> getNotifications(String uid) async{
+    List<GANotification> notification = new List<GANotification>();
+    try{
+      await _firestore.collection("Notifications")
+          .where('uidReceiver', isEqualTo: uid).get()
+          .then((value) =>
+        value.docs.forEach((element) {
+          GANotification notif = new GANotification(
+            id: element["idConversation"],
+            uidReceiver: uid,
+            read: element["read"]
+          );
+          notification.add(notif);
+        })
+      );
+      return notification;
+    }catch(exception){
+      print("Hubo error en get notifications en user service");
+      print(exception);
+      return notification;
     }
   }
 

@@ -1,7 +1,7 @@
-class Notification{
+class GANotification{
   final String id;
   final String uidReceiver;
   final bool read;
 
-  Notification(this.id, this.uidReceiver, this.read);
+  GANotification({this.id, this.uidReceiver, this.read});
 }
