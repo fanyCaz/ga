@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_array/classes/call.dart';
 import 'package:gallery_array/pages/utils/AppID.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
@@ -6,9 +7,11 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 
 
 class CallPage extends StatefulWidget {
-  final String channelName;
+  //final String channelName;
+  final Call call;
 
-  const CallPage({Key key, this.channelName}) : super(key: key);
+  //const CallPage({Key key, this.channelName}) : super(key: key);
+  const CallPage({Key key, this.call}) : super(key: key);
   @override
   _CallPageState createState() => _CallPageState();
 }
@@ -46,7 +49,7 @@ class _CallPageState extends State<CallPage> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1920, 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(Token, widget.channelName, null, 0);
+    await _engine.joinChannel(Token, channelName1, null, 0);
   }
 
   Future<void> _initAgoraRtcEngine() async {

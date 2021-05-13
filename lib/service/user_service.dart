@@ -387,8 +387,12 @@ class UserService{
     return conversations;
   }
 
+  //CALLS
+
+  final CollectionReference callCollection = FirebaseFirestore.instance.collection("Call");
+  Stream<DocumentSnapshot> callStream({String uid}) => callCollection.doc(uid).snapshots();
+
   Future<bool> makeCall({Call call}) async {
-    
     try {
       call.hasDialled = true;
       Map<String, dynamic> hasDialledMap = call.toMap(call);
@@ -400,6 +404,7 @@ class UserService{
       await _firestore.collection("Call").doc(call.receiverId).set(hasNotDialledMap);
       return true;
     } catch (e) {
+      print("Error en make call en user service");
       print(e);
       return false;
     }
@@ -411,6 +416,7 @@ class UserService{
       await _firestore.collection("Call").doc(call.receiverId).delete();
       return true;
     } catch (e) {
+      print("Hubo error en end call en user service");
       print(e);
       return false;
     }

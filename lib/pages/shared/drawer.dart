@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_array/localization/constants.dart';
+import 'package:gallery_array/pages/application/call_pickup.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +91,19 @@ class _DrawerListState extends State<DrawerList> {
               Navigator.pushNamed(context,home);
             },
           ) : SizedBox(height: 10,),
+          ListTile(
+            leading: Icon(
+              Icons.code,
+              color: Colors.white,
+              size: 30,
+            ),
+            title: Text('Sii if ijt wokds'),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => PickUpPage(call: null)));
+            },
+          )
         ],
       ),
     );

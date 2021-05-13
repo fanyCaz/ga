@@ -48,7 +48,7 @@ class _PickUpPageState extends State<PickUpPage> {
                   icon: Icon(Icons.call_end),
                   color: Colors.redAccent,
                   onPressed: () async {
-                    await context.read<AuthenticationService>().endingCall(call: call);
+                    await context.read<AuthenticationService>().endingCall(call: widget.call);
                   },
                 ),
                 SizedBox(width: 25),
@@ -65,7 +65,7 @@ class _PickUpPageState extends State<PickUpPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) =>
-                              CallPage(channelName: channelName1))
+                              CallPage(call: widget.call))
                       );
                     }
                   }

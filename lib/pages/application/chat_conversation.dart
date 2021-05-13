@@ -6,6 +6,7 @@ import 'package:gallery_array/pages/application/CallPage.dart';
 import 'package:gallery_array/pages/home_page.dart';
 import 'package:gallery_array/pages/shared/app_bar.dart';
 import 'package:gallery_array/pages/shared/drawer.dart';
+import 'package:gallery_array/pages/utils/call_methods.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/route_names.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -128,7 +129,22 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                       heroTag: 'send-videocall',
                       child: Icon(Icons.videocam, color: Colors.white, size: 18),
                       elevation: 0,
-                      onPressed: onJoin,
+                      onPressed: (){
+                        if (firebaseUser.uid == widget.uidUser1){
+                          CallUtils.dial(
+                            fromUid: widget.uidUser1, fromUsername: widget.username1,
+                            toUid: widget.uidUser2, toUsername: widget.username2,
+                            context: context
+                          );
+                        }else{
+                          CallUtils.dial(
+                            fromUid: widget.uidUser2, fromUsername: widget.username2,
+                            toUid: widget.uidUser1, toUsername: widget.username1,
+                            context: context
+                          );
+                        }
+                      },
+                      //onPressed: onJoin,
                     ),
                     Expanded(
                       child: TextField(
@@ -169,10 +185,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
     var permissionMicrophoneStatus = await Permission.microphone.status;
 
     if(permissionMicrophoneStatus.isGranted && permissionCameraStatus.isGranted){
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CallPage(channelName: channelName1))
-      );
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(channelName: channelName1)));
     }
   }
 }

@@ -94,10 +94,7 @@ class _AgoraExampleState extends State<AgoraExample> {
     var permissionMicrophoneStatus = await Permission.microphone.status;
 
     if(permissionMicrophoneStatus.isGranted && permissionCameraStatus.isGranted){
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CallPage(channelName: txtController.text))
-      );
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(channelName1: txtController.text)));
     }
   }
 }

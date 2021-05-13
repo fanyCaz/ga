@@ -11,10 +11,8 @@ class Call {
   Call({
     this.callerId,
     this.callerName,
-    this.callerPic,
     this.receiverId,
     this.receiverName,
-    this.receiverPic,
     this.channelId,
     this.hasDialled,
   });
@@ -23,10 +21,8 @@ class Call {
     Map<String, dynamic> callMap = Map();
     callMap["caller_id"] = call.callerId;
     callMap["caller_name"] = call.callerName;
-    callMap["caller_pic"] = call.callerPic;
     callMap["receiver_id"] = call.receiverId;
     callMap["receiver_name"] = call.receiverName;
-    callMap["receiver_pic"] = call.receiverPic;
     callMap["channel_id"] = call.channelId;
     callMap["has_dialled"] = call.hasDialled;
     return callMap;

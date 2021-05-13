@@ -4,6 +4,7 @@ import 'package:gallery_array/localization/constants.dart';
 import 'package:gallery_array/localization/gallery_array_localization.dart';
 import 'package:gallery_array/pages/application/feed_ex.dart';
 import 'package:gallery_array/pages/home_page.dart';
+import 'package:gallery_array/provider/user_provider.dart';
 import 'package:gallery_array/routes/auth_service.dart';
 import 'package:gallery_array/routes/custom_router.dart';
 import 'package:gallery_array/routes/route_names.dart';
@@ -62,7 +63,8 @@ class _MyAppState extends State<MyApp> {
         ),
         StreamProvider(
           create: (context) => context.read<AuthenticationService>().authStateChanges,
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         title: 'Gallery Array',
