@@ -45,8 +45,7 @@ class _MyAppState extends State<MyApp> {
       }));
     super.didChangeDependencies();
   }
-  //provider no es gestor de estados
-//fluter bloc es para gestionar estados
+
   @override
   Widget build(BuildContext context) {
     if(_locale  == null ){
@@ -113,7 +112,7 @@ class Error extends StatelessWidget{
   Widget build(BuildContext context) {
     return  MaterialApp(
       home: Scaffold(
-        body: Text('no sepuedoeee'),
+        body: Text('Error'),
       ),
     );
   }
